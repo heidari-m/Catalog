@@ -1,2 +1,2 @@
 # Catalog
-Comprehensive catalog
+Comprehensive catalog.
