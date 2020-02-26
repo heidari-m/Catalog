@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'seed',
-
+    'django_tables2',
+    'bootstrap4',
+    'jquery',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
