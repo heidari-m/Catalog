@@ -1,6 +1,9 @@
 {% extends "seed/base_generic.html" %}
 {% block content %}
     <br><h1>Variety Name: {{ object }}</h1>
+    {% if variety.photo %}
+        <p><img src="{{ variety.photo.url }}"></p>
+    {% endif %}
     <p><br>
         {% if table %}
             <ul>
@@ -8,11 +11,7 @@
                 {% render_table table %}
             </ul>
         {% else %}
-            <p>There is no info.</p>
+            <p>There is no Info.</p>
         {% endif %}
     </p>
-
-    {% if variety.photo %}
-        <p><img src="{{ variety.photo.url }}"></p>
-    {% endif %}
 {% endblock %}

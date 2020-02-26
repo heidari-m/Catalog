@@ -1,11 +1,11 @@
 {% extends "seed/base_generic.html" %}
 {% block content %}
-    <br><h1>Treasury</h1><br>
-    {% if species_list %}
+    <br><h1>All Families</h1><br>
+    {% if family_list %}
         <ul>
-            {% for species in species_list %}
+            {% for family in family_list %}
                 <li>
-                    <a href="{{ species.get_absolute_url }}">{{ species.name }}</a>
+                    <a href="{{ family.get_absolute_url }}">{{ family.name }}</a>
                 </li>
             {% endfor %}
         </ul>

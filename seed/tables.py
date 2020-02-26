@@ -13,6 +13,7 @@ class VarietyFieldValueTable(tables.Table):
 
 
 class FamilySpecificationTable(tables.Table):
+
     class Meta:
         model = FamilySpecification
         template_name = 'django_tables2/bootstrap4.html'

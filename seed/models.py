@@ -8,6 +8,7 @@ from django.urls import reverse
 class Species(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=50, null=True)
+    photo = models.ImageField(upload_to='seed/gallery', null=True, blank=True)
     # code = models.CharField(max_length=10, null=True, blank=True)
     # crop = models.ForeignKey('Crop', on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -21,12 +22,14 @@ class Species(models.Model):
 class Family(models.Model):
     name = models.CharField(max_length=50)
     species = models.ForeignKey('Species', on_delete=models.PROTECT)
+    photo = models.ImageField(upload_to='seed/gallery', null=True, blank=True)
+
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('family-detail', args=[str(self.name)])
+        return reverse('familyspecification-detail', args=[str(self.id)])
 
 
 class FamilySpecification(models.Model):

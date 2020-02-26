@@ -27,6 +27,11 @@ class SpeciesDetailView(generic.DetailView):
     #     species_qs = Species.objects.filter(species=self.kwargs[id]).values()
 
 
+class FamilyListView(generic.ListView):
+    model = Family
+    template_name = 'seed/family_list.html'
+
+
 class FamilyDetailView(generic.DetailView):
     model = Family
     slug_field = 'name'

@@ -3,6 +3,9 @@
     <br>
     <h1>Family Name: {{ family.name }}</h1>
     <p><strong>Belongs to: <a href="{{ family.species.get_absolute_url }}">{{ family.species }}</a></strong></p>
+    {% if family.photo %}
+        <p><img src="{{ family.photo.url }}"></p>
+    {% endif %}
     <br>
     <p>
         {% if table %}

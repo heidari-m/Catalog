@@ -2,6 +2,9 @@
 {% block content %}
     <br><h1>Species name: {{ species.name }}</h1>
     <p><strong>Description: {{ species.description }}</strong></p>
+    {% if species.photo %}
+        <p><img src="{{ species.photo.url }}"></p>
+    {% endif %}
     <br>
     {% for family in species.family_set.all %}
         <p>Related Family: <a href="{% url 'familyspecification-detail' family.id %}">{{ family }}</a></p>
