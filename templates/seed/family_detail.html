@@ -1,0 +1,21 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    <br>
+    <h1>Family Name: {{ family.name }}</h1>
+    <p><strong>Belongs to: <a href="{{ family.species.get_absolute_url }}">{{ family.species }}</a></strong></p>
+    <br>
+    <p>
+        {% if table %}
+            {% load django_tables2 %}
+            {% render_table table %}
+        {% else %}
+            <p>There is no info.</p>
+        {% endif %}
+    </P>
+    <p>
+        <strong>All Varieties:</strong>
+        {% for varietyItem in family.variety_set.all %}
+            <li><a href="{% url 'variety-detail' varietyItem.id %}">{{ varietyItem.name }}</a></li>
+        {% endfor %}
+    </p>
+{% endblock %}

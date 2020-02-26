@@ -1,0 +1,15 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    <br><h1>Treasury</h1><br>
+    {% if species_list %}
+        <ul>
+            {% for species in species_list %}
+                <li>
+                    <a href="{{ species.get_absolute_url }}">{{ species.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}

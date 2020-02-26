@@ -1,0 +1,16 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    <h1>Treasury</h1>
+    {% if portfolio_list %}
+        <ul>
+            {% for item in portfolio_list %}
+                <li>
+                    <a href="{{ item.get_absolute_url }}">{{ item.species.name }}</a> ({{ item.crop }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no books in the library.</p>
+    {% endif %}
+
+{% endblock %}

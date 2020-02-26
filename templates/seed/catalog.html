@@ -1,0 +1,17 @@
+{% extends "seed/base_generic.html" %}
+
+{% block content %}
+  <h1>Index</h1>
+  <p>Welcome Message <em>em tag</em>!</p>
+  <h2>Dynamic content</h2>
+  <p>Species: </p>
+  <ul>
+    {% for ins in qs %}
+        <li><strong>{{ ins.species }}</strong></li>
+    {% endfor %}
+{#    <li><strong>B:</strong> {{ crop_name }}</li>#}
+{#    <li><strong>C:</strong> </li>#}
+{#    <li><strong>A:</strong> </li>#}
+{#    <li><strong>U:</strong> </li>#}
+  </ul>
+{% endblock %}
