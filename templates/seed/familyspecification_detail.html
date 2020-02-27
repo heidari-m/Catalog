@@ -70,8 +70,14 @@
         {% else %} {{ familyspecification.sprouting_time_days_min_interval }} -
             {{ familyspecification.sprouting_time_days_max_interval }}
         {% endif %}
-
+        <p></p>
     {% else %}
         <p>There is no Info.</p>
     {% endif %}
+    <br>
+    Related Varieties:
+        {% for variety in variety_list %}
+            <li><a href="{% url 'variety-detail' variety.id %}">{{ variety.name }}</a></li>
+        {% endfor %}
+
 {% endblock %}

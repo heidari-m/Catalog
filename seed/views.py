@@ -40,8 +40,8 @@ class FamilyDetailView(generic.DetailView):
 
 class FamilySpecificationDetailView(generic.DetailView):
     model = FamilySpecification
-    # slug_field = 'family'
-    # slug_url_kwarg = 'str'
+    slug_field = 'family'
+    slug_url_kwarg = 'str'
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -49,6 +49,11 @@ class FamilySpecificationDetailView(generic.DetailView):
     #     context['family_specification_value'] = family_specification_qs.values()
     #     context['table'] = FamilySpecificationTable(family_specification_qs)
     #     return context
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['variety_list'] = Variety.objects.filter(family__species_id=self.kwargs['str'])
+        return context
 
 
 class VarietyDetailView(generic.DetailView):

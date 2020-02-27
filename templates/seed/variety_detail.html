@@ -1,15 +1,18 @@
 {% extends "seed/base_generic.html" %}
 {% block content %}
     <br><h1>Variety Name: {{ object }}</h1>
+    <p>Parent Family: <a href="{{ variety.family.get_absolute_url }}">{{ variety.family.name }}</a></p>
     {% if variety.photo %}
-        <p><img src="{{ variety.photo.url }}"></p>
+        <div class="basket"><img src="{{ variety.photo.url }}"></div>
     {% endif %}
     <p><br>
         {% if table %}
-            <ul>
-                {% load django_tables2 %}
-                {% render_table table %}
-            </ul>
+            <div class="container">
+                <ul>
+                    {% load django_tables2 %}
+                    {% render_table table %}
+                </ul>
+            </div>
         {% else %}
             <p>There is no Info.</p>
         {% endif %}

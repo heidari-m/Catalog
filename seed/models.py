@@ -24,12 +24,12 @@ class Family(models.Model):
     species = models.ForeignKey('Species', on_delete=models.PROTECT)
     photo = models.ImageField(upload_to='seed/gallery', null=True, blank=True)
 
-
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('familyspecification-detail', args=[str(self.id)])
+
 
 
 class FamilySpecification(models.Model):
@@ -55,8 +55,8 @@ class FamilySpecification(models.Model):
         ('t', 'TRANSPLANT'),
     )
     depth_type = models.CharField(max_length=1, choices=DEPTH_TYPE, default='s', blank=True)
-    depth_min_interval = models.IntegerField(null=True, blank=True)
-    depth_max_interval = models.IntegerField(null=True, blank=True)
+    depth_min_interval = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    depth_max_interval = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     distance_CM_row_to_row_min_interval = models.IntegerField(null=True, blank=True)
     distance_CM_row_to_row_max_interval = models.IntegerField(null=True, blank=True)
     distance_CM_plant_to_plant_min_interval = models.IntegerField(null=True, blank=True)
@@ -68,7 +68,7 @@ class FamilySpecification(models.Model):
         return self.family.name
 
     def get_absolute_url(self):
-        return reverse('familyspecification-detail', args=[str(self.id)])
+        return reverse('familyspecification-detail', args=[self.family.name])
 
 
 class VarietyField(models.Model):
