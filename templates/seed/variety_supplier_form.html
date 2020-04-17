@@ -1,0 +1,48 @@
+{% extends "seed/base_generic.html" %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+    <script type="text/javascript">
+        $("#id_contact").change(function () {
+            var url = $("#personForm").attr("data-entity-url");  // get the url of the `load_cities` view
+            var contact = $(this).val();  // get the selected country ID from the HTML input
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'contact': contact       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_entity").html(data);  // replace the contents of the city input with the data that came from the server
+                    $('select').formSelect();
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $("#id_entity").change(function () {
+            var url = $("#personForm").attr("data-persons-url");  // get the url of the `load_cities` view
+            var contact = $(this).val();  // get the selected country ID from the HTML input
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'contact': contact       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_contact_person").html(data);  // replace the contents of the city input with the data that came from the server
+                    $('select').formSelect();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="section">
+        <strong>Supplier Contact: </strong>
+        <a href="{% url 'contact-detail' varietysupplier.variety.supplier_contact.id %}">{{ varietysupplier.variety.supplier_contact }}</a>
+    </div>
+    <form method="post" id="personForm" data-entity-url="{% url 'ajax_load_entities' %}"
+          data-persons-url="{% url 'ajax_load_persons' %}" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

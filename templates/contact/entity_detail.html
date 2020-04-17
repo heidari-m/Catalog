@@ -1,0 +1,10 @@
+{% extends "contact/base_generic.html" %}
+{% block content %}
+    <br>{{ entity.name }}
+    <br>{{ entity.identification_number }}
+    <br>{{ entity.address_street }} {{ entity.street_number }}
+    <br>{{ entity.email }}
+    <br>{{ entity.phone_number }}
+    <br>{{ entity.note }}
+    <br>{{ entity.contact_person.all|join:', '}}
+{% endblock %}

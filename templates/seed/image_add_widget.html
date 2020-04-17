@@ -1,0 +1,82 @@
+{% extends 'seed/base_widget.html' %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+<script type="text/javascript">
+    function showEditPopup(url) {
+        console.log("from edit");
+        var win = window.open(url, "Edit",
+            'height=500,width=800,resizable=yes,scrollbars=yes');
+        return false;
+    }
+
+    function showAddPopup(triggeringLink) {
+        console.log("after trig log");
+        console.log(triggeringLink.id);
+        console.log("after id log");
+        var name = triggeringLink.id.replace(/^type/, 'create');
+        var n2 = triggeringLink.id.replace(/^type/, 'create');
+        console.log(name);
+        href = triggeringLink.href;
+        console.log(href);
+        var win = window.open(href, name, 'height=500,width=500,resizable=no,scrollbars=no');
+
+        win.focus();
+        return false;
+    }
+
+    function closePopup(win, newID, newRepr, id) {
+        alert("form close");
+        console.log("test1");
+        $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        win.close();
+    }
+</script>
+
+<script type="text/javascript">
+    $("#id_model2").change(function () {
+        model2_naam = $("#id_model2 option:selected").text();
+        console.log(model2_naam);
+
+        var data = {"model2_naam": model2_naam};
+        $.ajax({
+            type: 'GET',
+            url: '/model2/ajax/get_model2_id',
+            data: data,
+            success: function (data) {
+                var url = "/model2/" + data['model2_id'] + "/edit/";
+                showEditPopup(url);
+            },
+            error: function (data) {
+                alert("Something Went Wrong");
+            }
+        });
+    })
+</script>
+{% block content %}
+    {#    {% include "django/forms/widgets/input.html" %}#}
+    {#    above line include the upload component beacuse following has the component above is commented#}
+    {% if widget.is_initial %}
+        <div class="section">
+            {{ widget.initial_text }}:<a href="{{ widget.value.url }}">{{ widget.value }}</a>
+            {% if not widget.required %}
+                <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">
+                <label for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
+                <br>{{ widget.input_text }}:
+                <input type="{{ widget.type }}" name="{{ widget.name }}">
+            {% endif %}
+            <a href="image/create" id="id_add_image" onclick="return showAddPopup(this);"><i
+                    class="material-icons">add</i></a><br><br><br><br><br>
+            {% include "django/forms/widgets/attrs.html" %}
+        </div>
+    {% else %}
+        {% include "django/forms/widgets/input.html" %}
+    {% endif %}
+
+
+
+{% endblock %}
+
+
+
+
+
+

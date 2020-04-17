@@ -1,0 +1,91 @@
+{% extends "seed/base_generic.html" %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+    {#    <script>var uu = {% url 'serial_no' %}</script>#}
+    {#    <script>var tes = 'some text'</script>#}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/variety_form.js"></script>
+
+    <script type="text/javascript">
+        $("#id_global_crop").change(function () {
+            var url = $("#id_variety_form").attr("data-cropfamily-url");  // get the url of the `load_cities` view
+            var global_crop_id = $(this).val();
+            console.log(global_crop_id)// get the selected country ID from the HTML input
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'global_crop_id': global_crop_id
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_crop_family").html(data);  // replace the contents of the city input with the data that came from the server
+                    $('select').formSelect();
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#id_crop_family").change(function () {
+            var url = $("#id_variety_form").attr("data-species-url");  // get the url of the `load_cities` view
+            var crop_family_id = $(this).val();
+            console.log(crop_family_id)// get the selected country ID from the HTML input
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                data: {
+                    'crop_family_id': crop_family_id
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#id_species").html(data);  // replace the contents of the city input with the data that came from the server
+                    $('select').formSelect();
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#id_species").change(function () {
+            var form = $(this).closest("form");
+            $.ajax({
+                url: "{% url 'serial_no' %}",
+                data: {
+                    'species_id': $(this).val(),
+                    'crop_family': $("#id_crop_family").val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_serial_no").val(data.serial_no);
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% load materializecss %}
+    <br/>
+    <h3>Add New Variety</h3>
+    <form id="id_variety_form" action="" method="post" enctype="multipart/form-data"
+          data-validate-variety-supplier-name-url="{% url 'validate-variety-supplier-name' %}"
+          data-cropfamily-url="{% url 'ajax-load-cropfamily' %}"
+          data-species-url="{% url 'ajax-load-species' %}"
+          data-product-type-url="{% url 'ajax-load-product-type' %}">
+        {% csrf_token %}
+        {#                {{ form|materializecss }}#}
+
+        <div class="section">
+            {{ form.as_p }}
+        </div>
+        <input type="submit" value="Submit">
+        {{ form.media }}
+    </form>
+    {#    <form action="">#}
+    {#        {% for item in variety_image_form %}#}
+    {#            <div class="input-field col s5">#}
+    {#                {{ item.label_tag }}{{ item }}#}
+    {#                <a href={% url 'image_create' %} target="_blank"><i class="material-icons">add</i></a>#}
+    {#            </div>#}
+    {#        {% endfor %}#}
+    {#        {{ variety_image_form.as_ul }}#}
+    {#        {{ variety_image_form.media }}#}
+    {#    </form>#}
+{% endblock %}

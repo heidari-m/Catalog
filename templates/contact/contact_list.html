@@ -1,0 +1,15 @@
+{% extends "contact/base_generic.html" %}
+{% block content %}
+    <br><h1>Contacts</h1><br>
+    {% if contact_list %}
+        <ul>
+            {% for contact in contact_list %}
+                <li>
+                    <p>{{ contact }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There is no Info</p>
+    {% endif %}
+{% endblock %}

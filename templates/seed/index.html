@@ -1,12 +1,19 @@
 {% extends "seed/base_generic.html" %}
 
 {% block content %}
-    <br><h1>Index</h1>
-    <br><p>Welcome Message <em>em tag</em>!</p>
-    <h2>Dynamic content</h2>
-    <p>Followings are temp:</p>
-    <ul>
-        <li><strong>Number of <a href="{% url 'species' %}">Species</a>: </strong>{{ count_species }}</li>
-        <li><strong>Number of Varieties: </strong>{{ count_varieties }}</li>
-    </ul>
+    <div class="divider"></div>
+    <div class="section">
+        <h1>Index</h1>
+        <br>
+        <p>Welcome Message <em>em tag</em>!</p>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+        <h4>Dynamic content</h4>
+        <p>Followings are temp:</p>
+        <ul>
+            <li><strong>Number of <a href="{% url 'species' %}">Species</a>: </strong>{{ count_species }}</li>
+            <li><strong>Number of Varieties: </strong>{{ count_varieties }}</li>
+        </ul>
+    </div>
 {% endblock %}

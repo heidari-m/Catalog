@@ -1,0 +1,79 @@
+{% extends "contact/base_generic.html" %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+    <script type="text/javascript">
+        function showEditPopup(url) {
+            console.log("from edit");
+            var win = window.open(url, "Edit",
+                'height=500,width=800,resizable=yes,scrollbars=yes');
+            return false;
+        }
+
+        function showAddPopup(triggeringLink) {
+            var name = triggeringLink.id.replace(/^add_/, '');
+            href = triggeringLink.href;
+            var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+            win.focus();
+            return false;
+        }
+
+        function closePopup(win, newID, newRepr, id) {
+            $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+            win.close();
+        }
+    </script>
+
+    <script type="text/javascript">
+        $("#id_model2").change(function () {
+            model2_naam = $("#id_model2 option:selected").text();
+            console.log(model2_naam);
+
+            var data = {"model2_naam": model2_naam};
+            $.ajax({
+                type: 'GET',
+                url: '/model2/ajax/get_model2_id',
+                data: data,
+                success: function (data) {
+                    var url = "/model2/" + data['model2_id'] + "/edit/";
+                    showEditPopup(url);
+                },
+                error: function (data) {
+                    alert("Something Went Wrong");
+                }
+            });
+        })
+    </script>
+
+{#    <script type="text/javascript">#}
+{#        $(document).ready(function () {#}
+{#            $('#id_model2').change(function (e) {#}
+{#                var tmp = $(this).val();#}
+{#                console.log("mehdi");#}
+{#                console.log(tmp);#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+
+{% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <form action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.media }}
+{#        <label for="id_name" class="control-label">Name</label>#}
+{#        {{ form.name }}#}
+{#        <br><br>#}
+{#        <label for="id_amount" class="control-label">Amount</label>#}
+{#        {{ form.amount }}#}
+{#        <br><br>#}
+{#        <label for="id_model2" class="control-label">Model2</label>#}
+{#        {{ form.model2 }}#}
+{#        <a href={% url 'model2-create' %} id="C" onclick="return showAddPopup(this);"><i#}
+{#                class="material-icons">add</i></a>#}
+{#        <a href={% url 'model2-edit' %} id="edi" onclick="return showEditPopup(this);"><i#}
+{#                class="material-icons">edit</i></a>#}
+{#        <br><br>#}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

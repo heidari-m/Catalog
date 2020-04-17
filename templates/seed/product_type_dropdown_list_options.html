@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for type in product_type_list %}
+    <option value="{{ type.pk }}">{{ type.type }}</option>
+{% endfor %}

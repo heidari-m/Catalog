@@ -1,0 +1,66 @@
+{% extends 'seed/base_generic.html' %}
+{% block content %}
+    <br><a href="{% url 'index' %}" >Home</a>
+    <br><a href="{% url 'business' %}" >Business</a>
+    <br><a href="{% url 'business_create' %}" >business_create</a>
+    <br><a href="{% url 'global_crop_create' %}" >global_crop_create</a>
+    <br><a href="{% url 'crop_family_create' %}" >crop_family_create</a>
+    <br><a href="{% url 'species' %}" >species</a>
+    <br><a href="{% url 'species_create' %}" >species_create</a>
+{#    <br><a href="{% url 'species-detail' %}" >species-detail</a>#}
+    <br>species-detail
+{#    <br><a href="{% url 'species_update' %}" >species_update</a>#}
+    <br>species_update
+{#    <br><a href="{% url 'species_delete' %}" >species_delete</a>#}
+    <br>species_delete
+    <br><a href="{% url 'product-type_create' %}" >product-type_create</a>
+    <br><a href="{% url 'varieties' %}" >varieties</a>
+    <br><a href="{% url 'variety_create' %}" >variety_create</a>
+    <br><a href="{% url 'ajax-load-cropfamily' %}" >ajax-load-cropfamily</a>
+    <br><a href="{% url 'ajax-load-species' %}" >ajax-load-species</a>
+{#    <br><a href="{% url 'variety_update' %}" >variety_update</a>#}
+    <br>variety_update
+    <br><a href="{% url 'validate-variety-supplier-name' %}" >validate-variety-supplier-name</a>
+    <br><a href="{% url 'variety-image-create' %}" >variety-image-create</a>
+    <br><a href="{% url 'tmp' %}" >tmp</a>
+    <br><a href="{% url 'ajax_load_supplier' %}" >ajax_load_supplier</a>
+    <br><a href="{% url 'serial_no' %}" >serial_no</a>
+{#    <br><a href="{% url 'variety-detail' %}" >variety-detail</a>#}
+    <br>variety-detail
+    <br><a href="{% url 'variety_supplier_create' %}" >variety_supplier_create</a>
+    <br><a href="{% url 'variety_supplier_create' %}" >variety_supplier_create</a>
+{#    <br><a href="{% url 'variety-supplier-detail' %}" >variety-supplier-detail</a>#}
+    <br><a href="{% url 'variety-supplier-list' %}" >variety-supplier-list</a>
+{#    <br><a href="{% url 'variety-supplier_update' %}" >variety-supplier_update</a>#}
+    <br>variety-supplier_update
+    <br><a href="{% url 'ajax_load_entities' %}" >ajax_load_entities</a>
+    <br><a href="{% url 'ajax_load_persons' %}" >ajax_load_persons</a>
+    <br><a href="{% url 'ajax_load_basedata' %}" >ajax_load_basedata</a>
+{#    <br><a href="{% url 'variety-base-data-detail' %}" >variety-base-data-detail</a>#}
+    <br>variety-base-data-detail
+    <br><a href="{% url 'variety_base_data_create' %}" >variety_base_data_create</a>
+    <br><a href="{% url 'variety_base_data_create' %}" >variety_base_data_create</a>
+{#    <br><a href="{% url 'variety-basedata_update' %}" >variety-basedata_update</a>#}
+    <br>variety-basedata_update
+    <br><a href="{% url 'plc_create' %}" >plc_create</a>
+{#    <br><a href="{% url 'plc_add' %}" >plc_add</a>#}
+    <br>plc_add
+    <br><a href="{% url 'product_life_cycle_list' %}" >product_life_cycle_list</a>
+{#    <br><a href="{% url 'product_life_cycle_detail' %}" >product_life_cycle_detail</a>#}
+    <br>product_life_cycle_detail
+{#    <br><a href="{% url 'product_life_cycle_update' %}" >product_life_cycle_update</a>#}
+    <br>product_life_cycle_update
+    <br><a href="{% url 'country_plc_create' %}" >country_plc_create</a>
+    <br><a href="{% url 'variety_field_create' %}" >variety_field_create</a>
+    <br><a href="{% url 'variety_field_value_create' %}" >variety_field_value_create</a>
+    <br><a href="{% url 'mymodel' %}" >mymodel</a>
+    <br><a href="{% url 'mymodel_create' %}" >mymodel_create</a>
+{#    <br><a href="{% url 'myModel-detail' %}" >myModel-detail</a>#}
+    <br>myModel-detai
+    <br><a href="{% url 'model2-create' %}" >model2-create</a>
+{#    <br><a href="{% url 'model2-edit' %}" >model2-edit</a>#}
+    <br>model2-edit
+    <br><a href="{% url 'get_model2_id' %}" >get_model2_id</a>
+    <br><a href="{% url 'images' %}" >images</a>
+    <br><a href="{% url 'image_create' %}" >image_create</a>
+{% endblock %}

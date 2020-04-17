@@ -1,0 +1,5 @@
+{% block content %}
+    {% for i in mymodel_list %}
+        <a href= {{ i.get_absolute_url }}>{{ i }}</a> {{ i }}
+    {% endfor %}
+{% endblock %}

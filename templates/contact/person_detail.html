@@ -1,0 +1,10 @@
+{% extends "contact/base_generic.html" %}
+{% block content %}
+    <br>{{ person }}
+    <br>{{ person.email }}
+    <br>{{ person.telephone }}
+    <br>{{ person.mobile }}
+    <br>{{ person.note }}
+    <br>related person: <a href="{{ person.related_person.get_absolute_url }}">{{ person.related_person }}</a>
+    <br>{{ person.get_link_to_Other_contact_person_display }}
+{% endblock %}

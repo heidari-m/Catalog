@@ -1,0 +1,14 @@
+{% extends 'seed/base_generic.html' %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+{% endblock %}
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.media }}
+        <a href={% url 'image_create' %} target="_blank"><i class="material-icons">add</i></a>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

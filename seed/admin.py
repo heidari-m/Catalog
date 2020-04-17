@@ -1,20 +1,16 @@
 from django.contrib import admin
-from .models import Species,Family,FamilySpecification,VarietyField,VarietyFieldValue,Variety
+from .models import *
 
 # Register your models here.
+
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Family)
-class FamilyAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(FamilySpecification)
-class FamilySpecificationAdmin(admin.ModelAdmin):
+@admin.register(SpeciesImage)
+class ImageAdmin(admin.ModelAdmin):
     pass
 
 
@@ -28,6 +24,18 @@ class VarietyFieldValueAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(Variety)
 class VarietyAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(myModel)
+class myModelAdmin(admin.ModelAdmin):
+    pass
+
+

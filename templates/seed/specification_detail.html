@@ -1,0 +1,78 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    {{ specification }}
+    {% if specification %}
+        <br>
+        <h1>Family Name : {{ specification.species.name }}</h1>
+        <p><strong>Belongs to: <a
+                href="{{ specification.species.get_absolute_url }}">{{ specification.species }}</a></strong>
+        </p>
+
+        <br>
+        <strong>Seed Count </strong><em>per gramme</em><strong> : </strong>
+        {% if specification.seed_count_per_gramme_min_interval == specification.seed_count_per_gramme_max_interval %}
+            {{ specification.seed_count_per_gramme_min_interval }}
+        {% else %} {{ specification.seed_count_per_gramme_min_interval }} -
+            {{ specification.seed_count_per_gramme_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Germ </strong><em>lasts years</em><strong> : </strong>
+        {% if specification.germ_lasts_year_min_interval == specification.germ_lasts_year_max_interval %}
+            {{ specification.germ_lasts_year_min_interval }}
+        {% else %} {{ specification.germ_lasts_year_min_interval }} -
+            {{ specification.germ_lasts_year_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Sow (KG/HA) </strong><em>{{ specification.get_sow_type1_display }}</em><strong> : </strong>
+        {% if specification.sow_KG_HA_min_interval1 == specification.sow_KG_HA_max_interval1 %}
+            {{ specification.sow_KG_HA_min_interval1 }}
+        {% else %} {{ specification.sow_KG_HA_min_interval1 }} -
+            {{ specification.sow_KG_HA_max_interval1 }}
+        {% endif %}
+
+        <br>
+        <strong>Sow (KG/HA) </strong><em>{{ specification.get_sow_type2_display }}</em><strong> : </strong>
+        {% if specification.sow_KG_HA_min_interval2 == specification.sow_KG_HA_max_interval2 %}
+            {{ specification.sow_KG_HA_min_interval2 }}
+        {% else %} {{ specification.sow_KG_HA_min_interval2 }} -
+            {{ specification.sow_KG_HA_max_interval2 }}
+        {% endif %}
+
+        <br>
+        <strong>Depth of </strong><em>{{ specification.get_depth_type_display }}</em><strong> : </strong>
+        {% if specification.depth_min_interval == specification.depth_max_interval %}
+            {{ specification.depth_min_interval }}
+        {% else %} {{ specification.depth_min_interval }} -
+            {{ specification.depth_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Distance (CM)</strong><em> Row-to-Row</em><strong> : </strong>
+        {% if specification.distance_CM_row_to_row_min_interval == specification.distance_CM_row_to_row_max_interval %}
+            {{ specification.distance_CM_row_to_row_min_interval }}
+        {% else %} {{ specification.distance_CM_row_to_row_min_interval }} -
+            {{ specification.distance_CM_row_to_row_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Distance (CM)</strong><em> Plant-to-Plant</em><strong> : </strong>
+        {% if specification.distance_CM_plant_to_plant_min_interval == specification.distance_CM_plant_to_plant_max_interval %}
+            {{ specification.distance_CM_plant_to_plant_min_interval }}
+        {% else %} {{ specification.distance_CM_plant_to_plant_min_interval }} -
+            {{ specification.distance_CM_plant_to_plant_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Sprouting Time </strong><em>(DAYS)</em><strong> : </strong>
+        {% if specification.sprouting_time_days_min_interval == specification.sprouting_time_days_max_interval %}
+            {{ specification.sprouting_time_days_min_interval }}
+        {% else %} {{ specification.sprouting_time_days_min_interval }} -
+            {{ specification.sprouting_time_days_max_interval }}
+        {% endif %}
+        <p></p>
+    {% else %}
+        <p>There is no Info.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'seed/base_generic.html' %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data">
+        <br>
+        <a href="{% url 'product_life_cycle_update' productlifecycle.id %}">Update</a>
+        <br>
+{#        <a href="{% url 'species_delete' species.id %}"> - Delete</a>#}
+        <br>{{ productlifecycle.variety.serial_no }}
+        <br>{{ productlifecycle.global_name }}
+        <br>{{ productlifecycle.other_global_name }}
+        <br>{{ productlifecycle.get_global_plc_display }}
+        <br>{{ productlifecycle.global_plc_date }}
+        <br>{{ productlifecycle.global_plc_remark }}
+    </form>
+{% endblock %}

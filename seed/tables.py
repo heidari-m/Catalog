@@ -1,7 +1,15 @@
 import django_tables2 as tables
 from django_tables2.utils import A
-from .models import Species, Family, FamilySpecification, VarietyFieldValue, VarietyField, Variety
+# from .models import Species, VarietyFieldValue, VarietyField, Variety
+from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+class PLCTable(tables.Table):
+    class Meta:
+        model = ProductLifeCycle
+        template_name = 'django_tables2/bootstrap4.html'
+        fields = ['variety','global_plc','global_plc_date']
 
 
 class VarietyFieldValueTable(tables.Table):
@@ -15,5 +23,5 @@ class VarietyFieldValueTable(tables.Table):
 class FamilySpecificationTable(tables.Table):
 
     class Meta:
-        model = FamilySpecification
+        model = Species
         template_name = 'django_tables2/bootstrap4.html'

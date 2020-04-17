@@ -1,0 +1,15 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    <br><h1>Business Division</h1><br>
+    {% if businessdivision_list %}
+        <ul>
+            {% for business in businessdivision_list %}
+                <li>
+                    <p>{{ business.get_business_field_display }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There is no Info</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'seed/base_generic.html' %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+{% endblock %}
+{% block content %}
+    {{ form.as_p }}
+{% endblock %}

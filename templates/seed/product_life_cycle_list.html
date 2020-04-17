@@ -1,0 +1,19 @@
+{% extends 'seed/base_generic.html' %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+{% endblock %}
+{% block content %}
+    <br><h1>PLC</h1><br>
+    {% if  productlifecycle_list %}
+        <ul>
+            {% for plc in productlifecycle_list %}
+                <li>
+                    <a href="{{ plc.get_absolute_url }}">{{ plc }}</a>
+{#                                        <p>{{ object }}{{ object.id }}</p>#}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There is no Info</p>
+    {% endif %}
+{% endblock %}

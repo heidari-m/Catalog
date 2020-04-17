@@ -1,0 +1,42 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    {% load helper %}
+    <br><h1>Varieties</h1><br>
+
+
+
+    <div class="row">
+        {% for variety in variety_list %}
+            {% if variety.photo %}
+                <div class="col s12 m7 l4">
+                    <div class="card small">
+                        <div class="card-image">
+                            <img src="{{ variety.photo.url }}">
+                            <span class="card-title">{{ variety.title }}</span>
+                        </div>
+                        <div class="card-content">
+                            <p>{{ variety.legend }}</p>
+                            {{ variety.filename }}
+                        </div>
+                        <div class="card-action">
+                            <a href="{{ variety.get_absolute_url }}">Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}
+
+{#{% block subNav %}#}
+{#    <div class="collection">#}
+{#        {% for variety in variety_list %}#}
+{#            <li>#}
+{#                <a href="{{ variety.get_absolute_url }}" class="collection-item">{{ variety.variety_supplier_name }}</a>#}
+{#            </li>#}
+{#        {% endfor %}#}
+{#    </div>#}
+{#{% endblock %}#}

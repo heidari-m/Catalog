@@ -1,0 +1,10 @@
+{#{% extends "seed/base_generic.html" %}#}
+{% block content %}
+<div class = "container">
+	<h1>Model2 Form</h1>
+	<form method = 'POST' action= '' enctype = "multipart/form-data" novalidate id = "model2-form">{% csrf_token %}
+		{{form.as_p}}
+		<input type="submit" value = "Submit" />
+	</form>
+</div>
+{% endblock %}

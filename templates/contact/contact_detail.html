@@ -1,0 +1,16 @@
+{% extends "contact/base_generic.html" %}
+{% block content %}
+    <br>{{ contact.primary_name }}
+    <br>{{ contact.contact_type }}
+    <br>
+    {% for entity in contact.entity_set.all %}
+        <a href="{{ entity.get_absolute_url }}">{{ entity }},</a>
+    {% endfor %}
+    {#    <br>{{ contact.entity_set.all|join:", " }}#}
+    <br>{{ contact.primary_note }}
+    <br>
+    {% for person in contact.person_set.all %}
+        <a href="{{ person.get_absolute_url }}">{{ person }},</a>
+    {% endfor %}
+    {#    <br>{{ contact.person_set.all|join:', ' }}#}
+{% endblock %}

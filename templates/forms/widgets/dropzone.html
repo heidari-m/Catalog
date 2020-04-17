@@ -1,0 +1,7 @@
+<div class='{{widget.attrs.class}} dropzone'>
+  <div class="fallback">
+    <input id="{{ widget.attrs.id }}" type="file" name="{{ widget.name }}">
+  </div>
+</div>
+
+{{ options|json_script:widget.attrs.class}}

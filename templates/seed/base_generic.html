@@ -1,34 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block title %}<title>Title in base_generic</title>{% endblock %}
     <meta charset="utf-8">
     <!-- This Part or Following Part -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" language="Javascript"
+            src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.11.3.min.js">
+    </script>
+
     <!-- This Part or Above -->
 
     <!-- Add additional CSS in static file -->
     {% load static %}
-    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    {#    <link rel="stylesheet" href="{% static '/css/styles.css' %}">#}
+    <link type="text/css" rel="stylesheet" href="{% static "materialize/css/materialize.css" %}"
+          media="screen,projection"/> <!-- this line or using cdn -->
     {% load bootstrap4 %}
-    {% bootstrap_css %}
+    {#    {% bootstrap_css %}#}
     {% bootstrap_javascript %}
+    {% load materializecss %}
+
+    <!-- Compiled and minified CSS -->
+    {#        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">#}
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 </head>
 <body>
-<div class="container-fluid">
+<div class="container brown lighten-5 class">
+    <!-- Page Layout here -->
+
+    <!-- Navbar goes here -->
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">Logo</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+        </div>
+    </nav>
+    {#    <!-- Page Layout here -->#}
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col s12 m4 l3">
+            <!-- Grey navigation panel -->
             {% block sidebar %}
-                <ul class="sidebar-nav">
-                    <li><a href="{% url 'index' %}">Home</a></li>
-                    <li><a href="{% url 'species' %}">Species</a></li>
-                    <li><a href="{% url 'family' %}">Families</a></li>
-                </ul>
+                {#                <ul class="sidebar-nav">#}
+                <div class="collection">
+                    <a href="{% url 'index' %}" class="collection-item">Home</a>
+{#                    <a href="{% url 'business' %}" class="collection-item">Business Division</a>#}
+                    <a href="{% url 'species' %}" class="collection-item">Species</a>
+                    <a href="{% url 'varieties' %}" class="collection-item">Variety</a>
+{#                    <a href="{% url 'images' %}" class="collection-item">Images</a>#}
+                    <a href="{% url 'contacts' %}" class="collection-item">Contacts</a>
+                    <a href="{% url 'all' %}" class="collection-item">All Links</a>
+                    {#                        <li><a href="{% url 'index' %}">Home</a></li>#}
+                    {#                        <li><a href="{% url 'business' %}">Business Division</a></li>#}
+                    {#                        <li><a href="{% url 'species' %}">Species</a></li>#}
+                    {#                        <li><a href="{% url 'images' %}">Images</a></li>#}
+                </div>
+                <br>               {#                </ul>#}
+                {% block subNav %}{% endblock %}
+                <br>
+                <div class="collection">
+{#                    <a href="{% url 'business_create' %}" class="collection-item">Create Business</a>#}
+{#                    <a href="{% url 'global_crop_create' %}" class="collection-item">Create Global Crop</a>#}
+{#                    <a href="{% url 'crop_family_create' %}" class="collection-item">Create Crop Family</a>#}
+                    <a href="{% url 'species_create' %}" class="collection-item">Create Species</a>
+{#                    <a href="{% url 'product-type_create' %}" class="collection-item">Create Product Type</a>#}
+                    <a href="{% url 'variety_create' %}" class="collection-item">Create Variety</a>
+{#                    <a href="{% url 'variety_supplier_create' %}" class="collection-item">Create Variety Supplier</a>#}
+{#                    <a href="{% url 'variety_base_data_create' %}" class="collection-item">Create Variety Base-data</a>#}
+{#                    <a href="{% url 'plc_create' %}" class="collection-item">Create Global PLC</a>#}
+                    <a href="{% url 'country_plc_create' %}" class="collection-item">Create Country PLC</a>
+{#                    <a href="{% url 'variety_field_create' %}" class="collection-item">Create Field Variety</a>#}
+{#                    <a href="{% url 'variety_field_value_create' %}" class="collection-item">Add Field Value</a>#}
+{#                    <a href="{% url 'mymodel_create' %}" class="collection-item">Create myModel</a>#}
+{#                    <a href="{% url 'image_create' %}" class="collection-item">tmp Create img</a>#}
+                </div>
             {% endblock %}
         </div>
-        <div class="col-sm-10 ">{% block content %}{% endblock %}</div>
+        <div class="col s12 m8 l9">
+            <!-- Teal page content  -->
+            {% block content %}{% endblock %}
+        </div>
     </div>
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Footer Content</h5>
+                    <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer
+                        content.</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2014 Copyright Text
+                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+        </div>
+    </footer>
+    {% block javascript %}{% endblock %}
 </div>
 </body>
 </html>

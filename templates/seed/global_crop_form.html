@@ -1,0 +1,9 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

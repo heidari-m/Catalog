@@ -1,15 +1,46 @@
 {% extends "seed/base_generic.html" %}
 {% block content %}
     <br><h1>Treasury</h1><br>
+    <div class="row">
+        {% for species in species_list %}
+            <div class="col s12 m7 l4">
+                {% if species.photo %}
+                    <div class="card small">
+                        <div class="card-image">
+                            <img src="{{ species.photo.url }}">
+                            <span class="card-title">{{ species.title }}</span>
+                        </div>
+                        <div class="card-content">
+                            <p>{{ species.legend }}</p>
+                        </div>
+                        <div class="card-action">
+                            <a href="{{ species.get_absolute_url }}">Details</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
     {% if species_list %}
-        <ul>
-            {% for species in species_list %}
-                <li>
-                    <a href="{{ species.get_absolute_url }}">{{ species.name }}</a>
-                </li>
-            {% endfor %}
-        </ul>
+        {#        <ul>#}
+        {#            {% for species in species_list %}#}
+        {#                <li>#}
+        {#                    <a href="{{ species.get_absolute_url }}">{{ species.name }}</a>#}
+        {#                </li>#}
+        {#            {% endfor %}#}
+        {#        </ul>#}
     {% else %}
         <p>There is no Info</p>
     {% endif %}
+{% endblock %}
+
+{% block subNav %}
+    <div class="collection">
+        {% for species in species_list %}
+            <li>
+                <a href="{{ species.get_absolute_url }}" class="collection-item">{{ species.name }}</a>
+            </li>
+        {% endfor %}
+    </div>
 {% endblock %}

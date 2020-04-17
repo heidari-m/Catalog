@@ -36,6 +36,8 @@ ALLOWED_HOSTS = ['catalog-pilot.herokuapp.com','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'dal',
+    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,10 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'seed',
+    'contact',
     'django_tables2',
     'bootstrap4',
     'jquery',
     'django.contrib.humanize',
+    'wkhtmltopdf',
+    'materializecssform',
+    'django.forms',
 ]
 
 MIDDLEWARE = [
@@ -65,8 +71,7 @@ ROOT_URLCONF = 'Catalog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -162,3 +168,7 @@ USE_THOUSAND_SEPARATOR = True
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
+
+
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

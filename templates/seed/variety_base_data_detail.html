@@ -1,0 +1,18 @@
+{#{% extends "seed/base_generic.html" %}#}
+{% block content %}
+    <div class="section">
+        <br>
+        <br>Usage: {{ varietybasedata.get_usage_display }}
+        <br>Ecology: {{ varietybasedata.get_ecology_display }}
+        <br>PC: {{ varietybasedata.get_production_cycle_display }}
+        <br>Color: {{ varietybasedata.get_color_display }}
+        <br>Tech: {{ varietybasedata.technical_description }}
+        <br>Uniqe...: {{ varietybasedata.unique_selling_points_and_commercial_positioning }}
+        <br>competition: {{ varietybasedata.competition }}
+        <br>Bancella pictures
+        <br>Bancella files
+        {#    <br>{{ varietybasedata.photo }}#}
+        {#    <br>{{ varietybasedata.document }}#}
+        <br>
+    </div>
+{% endblock %}

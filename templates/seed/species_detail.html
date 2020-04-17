@@ -1,17 +1,128 @@
 {% extends "seed/base_generic.html" %}
 {% block content %}
-    <br><h1>Species name: {{ species.name }}</h1>
-    <p><strong>Description: </strong>{{ species.description }}</p>
-    {% if species.photo %}
-        <p><img src="{{ species.photo.url }}"></p>
-    {% endif %}
+    <br><h1>{{ species.name }}</h1>
+    <a href="{% url 'species_update' species.id %}">Update</a>
+    <a href="{% url 'species_delete' species.id %}"> - Delete</a>
     <br>
-    {% for family in species.family_set.all %}
-        <p>Related Family: <a href="{% url 'familyspecification-detail' family.id %}">{{ family }}</a></p>
-    {% endfor %}
-    Related Varieties:
-    {% for variety in species.variety_set.all %}
-        <li><a href="{% url 'variety-detail' variety.id %}">{{ variety.name }}</a></li>
-    {% endfor %}
+    {% if species %}
+        <div class="section">
+            <br>
+            <h5><p>Common Name: {{ species.common_name }}</p>
+                <p>Latin Name: {{ species.latin_name }}</p></h5>
+        </div>
+        <br>
+        <div class="section">
+            Related Varieties:
+            {% for variety in species.variety_set.all %}
+                <li><a href="{% url 'variety-detail' variety.serial_no %}">{{ variety.variety_supplier_name }}</a></li>
+            {% endfor %}
+        </div>
+        <br>
+        <strong>Seed Count </strong><em>per gramme</em><strong> : </strong>
+        {% if species.seed_count_per_gramme_min_interval == species.seed_count_per_gramme_max_interval %}
+            {{ species.seed_count_per_gramme_min_interval }}
+        {% else %} {{ species.seed_count_per_gramme_min_interval }} -
+            {{ species.seed_count_per_gramme_max_interval }}
+        {% endif %}
 
+        <br>
+        <strong>Germination </strong><em>lasts years</em><strong> : </strong>
+        {% if species.germination_lasts_year_min_interval == species.germination_lasts_year_max_interval %}
+            {{ species.germination_lasts_year_min_interval }}
+        {% else %} {{ species.germination_lasts_year_min_interval }} -
+            {{ species.germination_lasts_year_max_interval }}
+        {% endif %}
+
+        {% if species.sow_type == 'b' %}
+            <br>
+            <strong>Sow (KG/HA) </strong><em>Direct Sowing</em><strong> : </strong>
+            {% if species.sow_KG_HA_direct_min_interval == species.sow_KG_HA_direct_max_interval %}
+                {{ species.sow_KG_HA_direct_min_interval }}
+            {% else %} {{ species.sow_KG_HA_direct_min_interval }} -
+                {{ species.sow_KG_HA_direct_max_interval }}
+            {% endif %}
+
+            <li style="margin-left: 40px;">{{ species.get_direct_sowing_type_display }}</li>
+            <li style="margin-left: 80px;">{{ species.get_hand_type_display }}</li>
+            <strong>Sow (KG/HA) </strong><em>Transplant</em><strong> : </strong>
+            {% if species.sow_KG_HA_transplant_min_interval == species.sow_KG_HA_transplant_max_interval %}
+                {{ species.sow_KG_HA_transplant_min_interval }}
+            {% else %} {{ species.sow_KG_HA_transplant_min_interval }} -
+                {{ species.sow_KG_HA_transplant_max_interval }}
+            {% endif %}
+        {% elif species.sow_type == 'd' %}
+            <br>
+            <strong>Sow (KG/HA) </strong><em>{{ species.get_sow_type_display }}</em><strong> : </strong>
+            {% if species.sow_KG_HA_direct_min_interval == species.sow_KG_HA_direct_max_interval %}
+                {{ species.sow_KG_HA_direct_min_interval }}
+            {% else %} {{ species.sow_KG_HA_direct_min_interval }} -
+                {{ species.sow_KG_HA_direct_max_interval }}
+            {% endif %}
+        {% elif species.sow_type == 't' %}
+            <br>
+            <strong>Sow (KG/HA) </strong><em>{{ species.get_sow_type_display }}</em><strong> : </strong>
+            {% if species.sow_KG_HA_transplant_min_interval == species.sow_KG_HA_transplant_max_interval %}
+                {{ species.sow_KG_HA_transplant_min_interval }}
+            {% else %} {{ species.sow_KG_HA_transplant_min_interval }} -
+                {{ species.sow_KG_HA_transplant_max_interval }}
+            {% endif %}
+        {% endif %}
+
+        <br>
+        <strong>Depth of </strong><em>{{ species.get_depth_type_display }}</em><strong> : </strong>
+        {% if species.depth_min_interval == species.depth_max_interval %}
+            {{ species.depth_min_interval }}
+        {% else %} {{ species.depth_min_interval }} -
+            {{ species.depth_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Distance (CM)</strong><em> Row-to-Row</em><strong> : </strong>
+        {% if species.distance_CM_row_to_row_min_interval == species.distance_CM_row_to_row_max_interval %}
+            {{ species.distance_CM_row_to_row_min_interval }}
+        {% else %} {{ species.distance_CM_row_to_row_min_interval }} -
+            {{ species.distance_CM_row_to_row_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Distance (CM)</strong><em> Plant-to-Plant</em><strong> : </strong>
+        {% if species.distance_CM_plant_to_plant_min_interval == species.distance_CM_plant_to_plant_max_interval %}
+            {{ species.distance_CM_plant_to_plant_min_interval }}
+        {% else %} {{ species.distance_CM_plant_to_plant_min_interval }} -
+            {{ species.distance_CM_plant_to_plant_max_interval }}
+        {% endif %}
+
+        <br>
+        <strong>Sprouting Time </strong><em>(DAYS)</em><strong> : </strong>
+        {% if species.sprouting_time_days_min_interval == species.sprouting_time_days_max_interval %}
+            {{ species.sprouting_time_days_min_interval }}
+        {% else %} {{ species.sprouting_time_days_min_interval }} -
+            {{ species.sprouting_time_days_max_interval }}
+        {% endif %}
+        <p></p>
+    {% else %}
+        <p>There is no Info.</p>
+    {% endif %}
+
+    {% if images %}
+        <br>
+        <div class="row">
+            {% for image in images %}
+                <div class="col s12 m7 l4">
+                    <div class="card small">
+                        <div class="card-image">
+                            <img src="{{ image.photo.url }}">
+                            <span class="card-title">{{ image.title }}</span>
+                        </div>
+                        <div class="card-content">
+                            <p>{{ image.legend }}</p>
+                        </div>
+                        <div class="card-action">
+                            <a href="#">This is a link</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}

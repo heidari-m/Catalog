@@ -1,20 +1,118 @@
 {% extends "seed/base_generic.html" %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
+
+    <script>
+        // Fetch variety-supplier data
+        $("#id_supplier").click(function () {
+            var url = $("#sec_form").attr("data-supplier-url");
+            console.log("from id tmp click");
+            $.ajax({
+                url: url,
+                data: {
+                    'tmp_var': '{{ variety.serial_no }}',
+                },
+                success: function (data) {
+                    $("#sec_form").html(data);
+                    $('#id_supplier_data_update').show('slow');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // fetch variety-basedata
+        $("#id_basedata").click(function () {
+            var url = $("#sec_form").attr("data-base-url");
+            console.log('from base clicked');
+            $.ajax({
+                url: url,
+                data: {
+                    'variety_id': '{{ variety.serial_no }}',
+                },
+                success: function (data) {
+                    $("#sec_form").html(data);
+                    $('#id_basedata_update').show('slow');
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
-    <br><h1>Variety Name: {{ object }}</h1>
-    <p>Parent Family: <a href="{{ variety.family.get_absolute_url }}">{{ variety.family.name }}</a></p>
-    {% if variety.photo %}
-        <div class="basket"><img src="{{ variety.photo.url }}"></div>
-    {% endif %}
-    <p><br>
-        {% if table %}
-            <div class="container">
-                <ul>
-                    {% load django_tables2 %}
-                    {% render_table table %}
-                </ul>
+    {% load helper %}
+    <br><h4>{{ variety.serial_no }} - {{ variety.global_name }}</h4>
+    <div class="section">
+        <a href="{% url 'variety_update' variety.serial_no %}">Update</a>
+        {#        <a href="{% url '' variety.serial_no %}"> - Delete</a>#}
+        <table>
+            <tr>
+                <td>Serial: {{ variety.serial_no }}</td>
+                <td id="id_basedata">Base-data
+                    {% if variety.varietybasedata.id %}
+                        <a hidden id="id_basedata_update"
+                           href="{% url 'variety-basedata_update' variety.varietybasedata.id %}">Manage</a>
+                    {% else %}
+                        <a id="id_basedata_add"
+                           href="{% url 'variety_base_data_create' variety.serial_no %}">Add</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td id="id_supplier">{{ variety.variety_supplier_name }} {{ variety.variety_supplier_id|yesnovar }}
+                    {% if variety.varietysupplier %}
+                        <a hidden id="id_supplier_data_update"
+                           href="{% url 'variety-supplier_update' variety.varietysupplier.id %}">Manage</a>
+                    {% else %}
+                        <a id="id_supplier_data_add"
+                           href="{% url 'variety_supplier_create' variety.serial_no %}">Add</a>
+                    {% endif %}
+                    {#                    <a href="{% url 'variety-supplier-detail' variety.supplier.id %}">{{ variety.supplier.id }}</a>#}
+                </td>
+                <td>
+                    Contact: <a href="{% url 'contact-detail' variety.supplier_contact.id %}">{{ variety.supplier_contact }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Crop family: {{ variety.crop_family }} <br></br>Species: <a
+                        href="{% url 'species-detail' variety.species.id %}">{{ variety.species }}</a></td>
+                <td>ProductType: {{ variety.product_type }}</td>
+            </tr>
+            <tr>
+                <td>PLC: {{ variety.productlifecycle_set.last.get_global_plc_display }} <a
+                        href="{% url 'plc_add' variety.serial_no %}">Manage</a></td>
+                {#                <td>PLC: {{ variety.latest_global_plc_display }} <a href="{% url 'plc_add' variety.serial_no %}">Manage</a> </td>#}
+                <td>PLC-Date: {{ variety.productlifecycle_set.last.global_plc_date }}</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div class="section">
+        <form method="post" id="sec_form" data-supplier-url="{% url 'ajax_load_supplier' %}"
+              data-base-url="{% url 'ajax_load_basedata' %}" novalidate>
+            <h6>Second Form</h6>
+
+        </form>
+    </div>
+    <div class="card">
+        {% if variety.photo %}
+            {#            <div class="basket"><img src="{{ variety.photo.url }}"></div>#}
+            <div class="card medium">
+                <div class="card-image">
+                    <img src="{{ variety.photo.url }}">
+                    <span class="card-title">{{ variety.photo_title }}</span>
+                </div>
+                <div class="card-content">
+                    <p>{{ variety.photo_legend }}</p>
+                    {{ variety.filename }}
+                </div>
+                <div class="card-action">
+                    <a href="{{ variety.get_absolute_url }}">Details</a>
+                </div>
             </div>
-        {% else %}
-            <p>There is no Info.</p>
         {% endif %}
-    </p>
+    </div>
+    <strong>PDF Link</strong>
 {% endblock %}

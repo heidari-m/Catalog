@@ -1,0 +1,16 @@
+{% extends "seed/base_generic.html" %}
+{% block content %}
+    <br><h1>Variety Supplier</h1><br>
+    {% if  object_list %}
+        <ul>
+            {% for object in object_list %}
+                <li>
+                    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+{#                                        <p>{{ object }}{{ object.id }}</p>#}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There is no Info</p>
+    {% endif %}
+{% endblock %}
