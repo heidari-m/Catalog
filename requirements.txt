@@ -70,7 +70,7 @@ Jinja2==2.10.1
 Markdown==3.2
 MarkupPy==1.14
 MarkupSafe==1.1.1
-git+git@github.com:IntelPython/mkl_fft.git
+git+https://github.com/IntelPython/mkl_fft.git
 mkl-random==1.1.0
 mkl-service==2.3.0
 mysql-connector-python==8.0.18
