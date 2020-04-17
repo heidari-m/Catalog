@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
 from .models import *
@@ -28,6 +29,21 @@ def contact_create(request):
     else:
         form = ContactForm()
         return render(request, 'contact/contact_form.html', {'form':form})
+
+
+def contact_create_popup(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            instance = form.save()
+            instance.save()
+            return HttpResponse(
+                '<script>opener.closePopup(window, "%s", "%s", "#id_supplier_contact");</script>' % (
+                instance.pk, instance.primary_name))
+        return render(request, 'contact/contact_form_popup.html', {'form': form})
+    else:
+        form = ContactForm()
+        return render(request, 'contact/contact_form_popup.html', {'form':form})
 
 
 class ContactTypeList(generic.ListView):

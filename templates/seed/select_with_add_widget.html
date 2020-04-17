@@ -1,23 +1,27 @@
 {% extends 'seed/base_widget.html' %}
 {% block javascript %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/initialization.js"></script>
-    <script type="text/javascript">
+    <script>
         function showEditPopup(url) {
             console.log("from edit");
             var win = window.open(url, "Edit",
                 'height=500,width=800,resizable=yes,scrollbars=yes');
             return false;
-        }
+        };
 
         function showAddPopup(triggeringLink) {
-            var name = triggeringLink.id.replace(/^type/, 'create');
-            {#var n2 = triggeringLink.id.replace(/^type/, 'create');#}
+            var name = triggeringLink.id.replace(/^instance_/, '');
+            console.log(name);
+            {
+                // var
+                n2 = triggeringLink.id.replace(/^type/, 'create');
+                //
+            }
             href = triggeringLink.href;
             var win = window.open(href, name, 'height=500,width=500,resizable=yes,scrollbars=yes');
 
             win.focus();
             return false;
-        }
+        };
 
         function closePopup(win, newID, newRepr, id) {
             alert("form close");
@@ -28,11 +32,12 @@
             $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>');
 
             win.close();
-        }
+        };
     </script>
 {% endblock %}
+{#{% load staticfiles %}#}
 {% block content %}
-    <a href="{% url 'product-type_create' %}" id="id_product_type_create" onclick="return showAddPopup(this);"><i
+    <a href="{% url 'product-type_create' %}" id="instance_create" onclick="return showAddPopup(this);"><i
             class="material-icons">add</i></a>
     {% include "django/forms/widgets/select.html" %}
     {#    {% if widget.is_initial %}#}

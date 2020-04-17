@@ -31,12 +31,15 @@
 
 {% endblock %}
 
-{#{% block subNav %}#}
-{#    <div class="collection">#}
-{#        {% for variety in variety_list %}#}
-{#            <li>#}
-{#                <a href="{{ variety.get_absolute_url }}" class="collection-item">{{ variety.variety_supplier_name }}</a>#}
-{#            </li>#}
-{#        {% endfor %}#}
-{#    </div>#}
-{#{% endblock %}#}
+{% block subNav %}
+    <div class="collection">
+        {% for variety in variety_list %}
+            {% if not variety.photo %}
+                <li>
+                    <a href="{{ variety.get_absolute_url }}"
+                       class="collection-item">{{ variety.variety_supplier_name }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

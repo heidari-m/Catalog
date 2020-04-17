@@ -188,7 +188,7 @@ class VarietyForm(ModelForm):
         model = Variety
         fields = '__all__'
         # widgets = {'photo':ImageWithAddWidget,'product_type':RelatedFieldWidgetWrapper}
-        widgets = {'photo':ImageWithAddWidget, 'product_type': SelectWithAddWidget,}
+        widgets = {'photo':ImageWithAddWidget, 'product_type': SelectWithAddWidget, 'supplier_contact': SelectWithAddContactWidget}
         error_messages = {
             'crop_family':{'required': _('My error')},
         }

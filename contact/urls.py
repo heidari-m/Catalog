@@ -6,6 +6,7 @@ urlpatterns = [
     path('contacts/', views.ContactList.as_view(), name='contacts'),
     path('contact/<int:pk>', views.ContactDetail.as_view(), name='contact-detail'),
     path('contact/create', views.contact_create, name='contact_create'),
+    path('contact/create/popup', views.contact_create_popup, name='contact_create_popup'),
     path('contact/types/', views.ContactTypeList.as_view(), name='contact-types'),
     path('contact/type/<int:pk>', views.ContactTypeDetail.as_view(), name='contact-type-detail'),
     path('contact/type/create', views.contact_type_create, name='contact_type_create'),
