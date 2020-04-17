@@ -25,7 +25,7 @@
     {% load materializecss %}
 
     <!-- Compiled and minified CSS -->
-    {#        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">#}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -54,10 +54,10 @@
                 {#                <ul class="sidebar-nav">#}
                 <div class="collection">
                     <a href="{% url 'index' %}" class="collection-item">Home</a>
-{#                    <a href="{% url 'business' %}" class="collection-item">Business Division</a>#}
+                    {#                    <a href="{% url 'business' %}" class="collection-item">Business Division</a>#}
                     <a href="{% url 'species' %}" class="collection-item">Species</a>
                     <a href="{% url 'varieties' %}" class="collection-item">Variety</a>
-{#                    <a href="{% url 'images' %}" class="collection-item">Images</a>#}
+                    {#                    <a href="{% url 'images' %}" class="collection-item">Images</a>#}
                     <a href="{% url 'contacts' %}" class="collection-item">Contacts</a>
                     <a href="{% url 'all' %}" class="collection-item">All Links</a>
                     {#                        <li><a href="{% url 'index' %}">Home</a></li>#}
@@ -69,20 +69,20 @@
                 {% block subNav %}{% endblock %}
                 <br>
                 <div class="collection">
-{#                    <a href="{% url 'business_create' %}" class="collection-item">Create Business</a>#}
-{#                    <a href="{% url 'global_crop_create' %}" class="collection-item">Create Global Crop</a>#}
-{#                    <a href="{% url 'crop_family_create' %}" class="collection-item">Create Crop Family</a>#}
+                    {#                    <a href="{% url 'business_create' %}" class="collection-item">Create Business</a>#}
+                    {#                    <a href="{% url 'global_crop_create' %}" class="collection-item">Create Global Crop</a>#}
+                    {#                    <a href="{% url 'crop_family_create' %}" class="collection-item">Create Crop Family</a>#}
                     <a href="{% url 'species_create' %}" class="collection-item">Create Species</a>
-{#                    <a href="{% url 'product-type_create' %}" class="collection-item">Create Product Type</a>#}
+                    {#                    <a href="{% url 'product-type_create' %}" class="collection-item">Create Product Type</a>#}
                     <a href="{% url 'variety_create' %}" class="collection-item">Create Variety</a>
-{#                    <a href="{% url 'variety_supplier_create' %}" class="collection-item">Create Variety Supplier</a>#}
-{#                    <a href="{% url 'variety_base_data_create' %}" class="collection-item">Create Variety Base-data</a>#}
-{#                    <a href="{% url 'plc_create' %}" class="collection-item">Create Global PLC</a>#}
+                    {#                    <a href="{% url 'variety_supplier_create' %}" class="collection-item">Create Variety Supplier</a>#}
+                    {#                    <a href="{% url 'variety_base_data_create' %}" class="collection-item">Create Variety Base-data</a>#}
+                    {#                    <a href="{% url 'plc_create' %}" class="collection-item">Create Global PLC</a>#}
                     <a href="{% url 'country_plc_create' %}" class="collection-item">Create Country PLC</a>
-{#                    <a href="{% url 'variety_field_create' %}" class="collection-item">Create Field Variety</a>#}
-{#                    <a href="{% url 'variety_field_value_create' %}" class="collection-item">Add Field Value</a>#}
-{#                    <a href="{% url 'mymodel_create' %}" class="collection-item">Create myModel</a>#}
-{#                    <a href="{% url 'image_create' %}" class="collection-item">tmp Create img</a>#}
+                    {#                    <a href="{% url 'variety_field_create' %}" class="collection-item">Create Field Variety</a>#}
+                    {#                    <a href="{% url 'variety_field_value_create' %}" class="collection-item">Add Field Value</a>#}
+                    {#                    <a href="{% url 'mymodel_create' %}" class="collection-item">Create myModel</a>#}
+                    {#                    <a href="{% url 'image_create' %}" class="collection-item">tmp Create img</a>#}
                 </div>
             {% endblock %}
         </div>
