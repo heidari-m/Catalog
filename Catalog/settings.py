@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'w9_5lei=nb999ddu+0pz!s5++#ll7s
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['catalog-pilot.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['catalog-run.herokuapp.com','catalog-pilot.herokuapp.com','127.0.0.1']
 
 
 
