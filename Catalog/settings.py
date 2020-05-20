@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -23,15 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECRET_KEY = 'w9_5lei=nb999ddu+0pz!s5++#ll7s--r4-ju_%u-2chd&r8g!'
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'w9_5lei=nb999ddu+0pz!s5++#ll7s--r4-ju_%u-2chd&r8g!')
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['catalog-run2.herokuapp.com','127.0.0.1']
-
-
+ALLOWED_HOSTS = ['catalog-run2.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
@@ -46,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'seed',
     'contact',
+    'usrmgr',
     'django_tables2',
     'bootstrap4',
     'jquery',
@@ -53,6 +49,8 @@ INSTALLED_APPS = [
     'wkhtmltopdf',
     'materializecssform',
     'django.forms',
+    # 'mod_wsgi.server',
+    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_currentuser.middleware.ThreadLocalUserMiddleware',
 ]
 
 ROOT_URLCONF = 'Catalog.urls'
@@ -87,7 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Catalog.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -101,7 +99,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -121,7 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -135,7 +131,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
@@ -143,6 +138,7 @@ USE_TZ = True
 
 # Heroku: Update database configuration from $DATABASE_URL.
 import dj_database_url
+
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
@@ -152,13 +148,11 @@ DATABASES['default'].update(db_from_env)
 # The absolute path to the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = os.path.join(BASE_DIR, 'templates/')
 
-
 # The URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'templates/seed/statics'),
-    ]
-
+]
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
@@ -169,6 +163,11 @@ USE_THOUSAND_SEPARATOR = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-
-
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
+LOGIN_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)

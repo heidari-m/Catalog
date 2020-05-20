@@ -1,11 +1,15 @@
 from django.db import models
 from django.urls import reverse
+import datetime
 
 from . import constant
 
 from os.path import splitext, basename
 
 from .validators import *
+from django_currentuser.middleware import (get_current_user, get_current_authenticated_user)
+from django_currentuser.db.models import CurrentUserField
+
 # Create your models here.
 
 
@@ -53,11 +57,11 @@ class Species(models.Model):
     crop_family = models.ForeignKey('CropFamily',on_delete=models.CASCADE)
     # business_division = models.ForeignKey('BusinessDivision', on_delete=models.PROTECT)
     #
-    seed_count_per_gramme_min_interval = models.IntegerField(null=True, blank=True)
-    seed_count_per_gramme_max_interval = models.IntegerField(null=True, blank=True)
+    seed_count_per_gramme_min_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
+    seed_count_per_gramme_max_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
 
-    germination_lasts_year_min_interval = models.IntegerField(null=True, blank=True)
-    germination_lasts_year_max_interval = models.IntegerField(null=True, blank=True)
+    germination_lasts_year_min_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
+    germination_lasts_year_max_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
 
     SOW_TYPE = (('d', 'DIRECT SOWING'),('t', 'TRANSPLANT'),('b','Both'))
     sow_type = models.CharField(max_length=1, choices=SOW_TYPE, default='b', blank=True, null=True)
@@ -68,15 +72,15 @@ class Species(models.Model):
     BY_HAND_TYPE = (('s','seed by seed'),('b','broadcasted'))
     hand_type = models.CharField(max_length=1, choices=BY_HAND_TYPE, default='s', blank=True, null=True)
 
-    sow_KG_HA_direct_min_interval = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    sow_KG_HA_direct_max_interval = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    sow_KG_HA_direct_min_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
+    sow_KG_HA_direct_max_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
 
-    sow_KG_HA_transplant_min_interval = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    sow_KG_HA_transplant_max_interval = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    sow_KG_HA_transplant_min_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
+    sow_KG_HA_transplant_max_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
 
     depth_type = models.CharField(max_length=1, choices=SOW_TYPE, default='d', blank=True, null=True)
-    depth_min_interval = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    depth_max_interval = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    depth_min_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
+    depth_max_interval = models.DecimalField(max_digits=7, decimal_places=3, null=True, blank=True)
 
     distance_CM_row_to_row_min_interval = models.IntegerField(null=True, blank=True)
     distance_CM_row_to_row_max_interval = models.IntegerField(null=True, blank=True)
@@ -181,6 +185,16 @@ class Variety(models.Model):
     photo = models.ImageField(upload_to='seed/repo/variety/image', null=True, blank=True)
     photo_title = models.CharField(max_length=70, null=True, blank=True)
     photo_legend = models.CharField(max_length=100, null=True, blank=True)
+    created_by = CurrentUserField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, related_name='updated_user')
+    group = models.ManyToManyField('auth.Group', null=True)
+
+    class Meta:
+        permissions = (
+            ('group_level', 'Group level'),
+        )
 
     def __str__(self):
         # if self.global_name:
@@ -219,7 +233,7 @@ class VarietySupplier(models.Model):
     def __str__(self):
         return self.variety.variety_supplier_name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, *args):
         return reverse('variety-supplier-detail', args=[str(self.id)])
 
 
@@ -242,7 +256,6 @@ class VarietyBaseData(models.Model):
         return reverse('variety-detail', args=[str(self.variety.serial_no)])
 
 
-
 class VarietyImage(models.Model):
     variety = models.ForeignKey('Variety', on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=50, null=True, blank=True)
@@ -253,10 +266,10 @@ class VarietyImage(models.Model):
         return self.legend
 
 
-class ProductLifeCycle(models.Model):
+class ProductLifeCycleLog(models.Model):
     variety = models.ForeignKey('Variety', on_delete=models.CASCADE)
-    global_name = models.CharField(max_length=50,)
-    other_global_name = models.CharField(max_length=50, null=True, blank=True)
+    # global_name = models.CharField(max_length=50,)
+    # other_global_name = models.CharField(max_length=50, null=True, blank=True)
     global_plc = models.CharField(max_length=2, choices=constant.GLOBAL_PLC)
     global_plc_date = models.DateField(null=True, blank=True)
     global_plc_remark = models.CharField(max_length=200, null=True, blank=True)
@@ -265,27 +278,46 @@ class ProductLifeCycle(models.Model):
         ordering = ['global_plc_date']
 
     def __str__(self):
-        return self.global_name
+        return self.variety.global_name
 
     def get_absolute_url(self):
         return reverse('product_life_cycle_detail', args=[str(self.pk)])
 
 
 class CountryPLC(models.Model):
-    global_plc = models.ForeignKey('ProductLifeCycle', on_delete=models.SET_NULL, null=True)
+    variety = models.ForeignKey('Variety', on_delete=models.SET_NULL, null=True)
     local_name = models.CharField(max_length=2, choices=constant.GLOBAL_PLC)
-    local_plc_date = models.DateField()
+    # local_plc_date = models.DateField()
     contact = models.ForeignKey('contact.Contact', on_delete=models.SET_NULL, null=True, blank=True)
     person_in_charge_of_development = models.ForeignKey('contact.Person', on_delete=models.SET_NULL, null=True, blank=True)
     trial_and_development_results = models.CharField(max_length=200, null=True, blank=True)
     go_to_market_approach = models.CharField(max_length=200, null=True, blank=True)
     local_brand = models.CharField(max_length=20, null=True, blank=True)
-    local_picture = models.ImageField(upload_to="seed/repo/country_plc/image")
-    local_picture = models.FileField(upload_to="seed/repo/country_plc/document")
+    local_picture = models.ImageField(upload_to="seed/repo/country_plc/image", null=True, blank=True)
+    local_picture = models.FileField(upload_to="seed/repo/country_plc/document", null=True, blank=True)
     remark = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.local_name
+
+
+class CountryPLCLog(models.Model):
+    CountryPLC = models.ForeignKey('CountryPLC', on_delete=models.CASCADE)
+    status = models.CharField(max_length=2, choices=constant.GLOBAL_PLC)
+    country_plc_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return self.status
+
+
+class Country(models.Model):
+    name = models.CharField(max_length=60)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('country-detail', args=[str(self.pk)])
 
 
 class VarietyField(models.Model):

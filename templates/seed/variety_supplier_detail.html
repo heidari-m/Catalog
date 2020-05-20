@@ -8,15 +8,13 @@
         <a href="{% url 'variety-supplier_update' varietysupplier.id %}">Update</a>
         {#        <a href="{% url '' variety.serial_no %}"> - Delete</a>#}
         <br>
-        <br>{{ varietysupplier.id }}
-        <br>{{ varietysupplier.name }}
-        <br>{{ varietysupplier.description }}
+        <br>Supplier No. {{ varietysupplier.id }}
+        <br>Variety: <a href="{{ varietysupplier.variety.get_absolute_url }}">{{ varietysupplier.variety }}</a>
+        <br>Description: {{ varietysupplier.description }}
         <br>{{ varietysupplier.photo }}
         <br>{{ varietysupplier.document }}
-        <br>{{ varietysupplier.remark }}
-        <br>{{ varietysupplier.contact }}
-        <br>{{ varietysupplier.contact_person }}
-        <br>{{ varietysupplier.entity }}
-        <input type="submit" value="Submit">
+        <br>Remark: {{ varietysupplier.remark }}
+        <br>Contact: <a href="{% url 'contact-detail' varietysupplier.variety.supplier_contact.id %}">{{ varietysupplier.variety.supplier_contact }}</a>
+
     </form>
 {% endblock %}

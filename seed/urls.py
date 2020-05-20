@@ -48,7 +48,7 @@ urlpatterns = [
     path('variety/<slug:str>', views.VarietyDetailView.as_view(), name='variety-detail'),
     #
     path('variety/supplier/create', views.variety_supplier_create, name='variety_supplier_create'),
-    path('variety/supplier/create/<slug:str>', views.variety_supplier_create, name='variety_supplier_create'),
+    path('variety/supplier/create/<slug:str>', views.variety_supplier_create, name='variety_supplier_create2'),
     path('variety/supplier/<int:pk>', views.VarietySupplierDetail.as_view(), name='variety-supplier-detail'),
     path('variety/suppliers/', views.VarietySupplierList.as_view(), name='variety-supplier-list'),
     path('variety/suppliers/<int:pk>/update', views.VarietySupplierUpdate.as_view(), name='variety-supplier_update'),
@@ -65,11 +65,18 @@ urlpatterns = [
     #
     path('plc/create', views.product_life_cycle_create, name='plc_create'),
     path('plc/add/<slug:str>', views.plc_manage_add, name='plc_add'),
-    path('plc/', views.ProductLifeCycleList.as_view(), name='product_life_cycle_list'),
-    path('plc/<int:pk>', views.ProductLifeCycleDetail.as_view(), name='product_life_cycle_detail'),
-    path('plc/<int:pk>/update', views.ProductLifeCycleUpdate.as_view(), name='product_life_cycle_update'),
+    path('plc/', views.ProductLifeCycleLogList.as_view(), name='product_life_cycle_list'),
+    path('plc/<int:pk>', views.ProductLifeCycleLogDetail.as_view(), name='product_life_cycle_detail'),
+    path('plc/<int:pk>/update', views.ProductLifeCycleLogUpdate.as_view(), name='product_life_cycle_update'),
+    #
+    path('country-plcs/', views.CountryPlcList.as_view(), name='country_plc_list'),
     path('country-plc/create', views.country_plc_create, name='country_plc_create'),
-
+    #
+    path('countries/', views.CountryList.as_view(), name='countries'),
+    path('country/<int:pk>/detail', views.CountryDetail.as_view(), name='country-detail'),
+    path('country/create/', views.country_create, name='country-create'),
+    path('country/<int:pk>/update', views.CountryUpdate.as_view(), name='country-update'),
+    # path('country/popup-create/', views.country_create, name='country-create_popup'),
     #
     path('variety/field/create', views.variety_field_create, name='variety_field_create'),
     path('variety/field/value/create', views.variety_field_value_create, name='variety_field_value_create'),

@@ -164,5 +164,6 @@ class SelectWithAddWidget(forms.Select):
     # def __init__(self, *args, **kwargs):
     #     super(SelectWithAddWidget, self).__init__(*args, **kwargs)
 
+
 class SelectWithAddContactWidget(forms.Select):
     template_name = 'seed/selectwithadd_supplier_contact.html'

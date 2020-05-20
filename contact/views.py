@@ -60,9 +60,12 @@ def contact_type_create(request):
     if request.method == "POST":
         form = ContactTypeForm(request.POST)
         if form.is_valid():
-            m = form.save()
-            m.save()
-            return redirect('/')
+            instance = form.save()
+            instance.save()
+            return HttpResponse(
+                '<script>opener.closePopup(window, "%s", "%s", "#id_contact_type");</script>' % (
+                instance.pk, instance.type))
+            # return redirect('/')
     else:
         form = ContactTypeForm()
         return render(request, 'contact/contact_form.html', {'form':form})

@@ -8,7 +8,7 @@ from .widgets import *
 from .errors import *
 
 from django.utils.translation import gettext_lazy as _
-
+from django_currentuser.db.models import CurrentUserField
 
 class BusinessDivisionForm(ModelForm):
     class Meta:
@@ -60,7 +60,7 @@ class SpeciesForm(ModelForm):
     def __int__(self, *args, **kwargs):
         super(SpeciesForm, self).__init__(*args, **kwargs)
         for name in self.fields.keys():
-            self.fields[name].widget.attrs.update({'id': 'id_'+name})
+            self.fields[name].widget.attrs.update({'id': 'id_' + name})
 
 
 class NameForm(forms.Form):
@@ -177,9 +177,22 @@ class VarietyBaseDataForm(ModelForm):
         model = VarietyBaseData
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        ## add a "form-control" class to each form input
+        super(VarietyBaseDataForm, self).__init__(*args, **kwargs)
+        for name in self.fields.keys():
+            self.fields[name].widget.attrs.update({
+                # 'class': 'form-control',
+                'id': 'id_' + name
+            })
+        # self.fields['variety'].widget.attrs.update({'disabled': "disabled"})
+
+
 from dal import autocomplete
+
+
 class VarietyForm(ModelForm):
-    #below commented code is an eaxmple of the Autocomplete Select
+    # below commented code is an eaxmple of the Autocomplete Select
     # product_type = forms.ModelChoiceField(
     #     queryset=ProductType.objects.all(),
     #     widget=autocomplete.ModelSelect2(url='auto-view')
@@ -187,10 +200,12 @@ class VarietyForm(ModelForm):
     class Meta:
         model = Variety
         fields = '__all__'
+        exclude = ['created_by','updated_by']
         # widgets = {'photo':ImageWithAddWidget,'product_type':RelatedFieldWidgetWrapper}
-        widgets = {'photo':ImageWithAddWidget, 'product_type': SelectWithAddWidget, 'supplier_contact': SelectWithAddContactWidget}
+        widgets = {'photo': ImageWithAddWidget, 'product_type': SelectWithAddWidget,
+                   'supplier_contact': SelectWithAddContactWidget}
         error_messages = {
-            'crop_family':{'required': _('My error')},
+            'crop_family': {'required': _('My error')},
         }
 
     def __init__(self, *args, **kwargs):
@@ -200,8 +215,9 @@ class VarietyForm(ModelForm):
         for name in self.fields.keys():
             self.fields[name].widget.attrs.update({
                 # 'class': 'form-control',
-                'id': 'id_'+name
+                'id': 'id_' + name
             })
+
         # self.fields['photo'].widget.attrs.update({
         #     'type': 'input',
         #     'class': 'material-icons',
@@ -212,6 +228,35 @@ class VarietyForm(ModelForm):
         #     if len(variety_supplier_id) < 4:
         #         raise forms.ValidationError("It is too short")
         #     return variety_supplier_id
+
+    def clean(self):
+        cleaned_data = super().clean()
+        variety_supplier_name = cleaned_data.get('variety_supplier_name')
+        supplier_contact = cleaned_data.get('supplier_contact')
+        serial_no = cleaned_data.get('serial_no')
+        qs_serial_no = Variety.objects.filter(serial_no=serial_no)
+        if qs_serial_no: # decide it is an update form
+            qs = Variety.objects.filter(variety_supplier_name=variety_supplier_name, supplier_contact=supplier_contact).exclude(serial_no=serial_no)
+            if qs:
+                raise forms.ValidationError('%s from %s already exists, you cannot update to an existing name.' % (
+                    variety_supplier_name, supplier_contact))
+                self.add_error('variety_supplier_name', 'Already exists ')
+            species = cleaned_data.get('species')
+            qs_species = Variety.objects.filter(variety_supplier_name=variety_supplier_name, species=species).exclude(serial_no=serial_no)
+            if qs_species:
+                raise forms.ValidationError('Same variety for the %s already exists.' % species)
+                self.add_error('variety_supplier_name', 'Already exists ')
+        else:
+            qs = Variety.objects.filter(variety_supplier_name=variety_supplier_name, supplier_contact=supplier_contact)
+            if qs:
+                raise forms.ValidationError('%s from %s already exists, you cannot add variety with the same name.' % (
+                    variety_supplier_name, supplier_contact))
+                self.add_error('variety_supplier_name', 'Already exists ')
+            species = cleaned_data.get('species')
+            qs_species = Variety.objects.filter(variety_supplier_name=variety_supplier_name, species=species)
+            if qs_species:
+                raise forms.ValidationError('Same variety for the %s already exists.' % species)
+                self.add_error('variety_supplier_name', 'Already exists ')
 
 
 class VarietyImageForm(ModelForm):
@@ -234,7 +279,7 @@ class VarietyFieldValueForm(ModelForm):
 
 class ProductLifeCycleForm(ModelForm):
     class Meta:
-        model = ProductLifeCycle
+        model = ProductLifeCycleLog
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -249,11 +294,34 @@ class ProductLifeCycleForm(ModelForm):
 
 class PLCManageForm(ProductLifeCycleForm):
     class Meta:
-        model = ProductLifeCycle
-        fields = ['variety','global_plc','global_plc_date']
+        model = ProductLifeCycleLog
+        fields = ['variety', 'global_plc', 'global_plc_date']
+
+    def __init__(self, *args, **kwargs):
+        ## add a "form-control" class to each form input
+        super(PLCManageForm, self).__init__(*args, **kwargs)
+        for name in self.fields.keys():
+            self.fields[name].widget.attrs.update({
+                # 'class': 'form-control',
+                'id': 'id_' + name
+            })
+        # self.fields['variety'].widget.attrs.update({'selected':})
+        # self.fields['variety'].widget.attrs.update({'disabled': "disabled"})
 
 
 class CountryPLCForm(ModelForm):
     class Meta:
         model = CountryPLC
+        fields = '__all__'
+
+
+class CountryPlcLogForm(ModelForm):
+    class Meta:
+        model = CountryPLCLog
+        fields = '__all__'
+
+
+class CountryForm(ModelForm):
+    class Meta:
+        model = Country
         fields = '__all__'

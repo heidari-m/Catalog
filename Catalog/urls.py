@@ -28,6 +28,8 @@ from django.conf.urls import include, url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('contact.urls')),
+    path('usrmgr/', include('usrmgr.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('seed/', include('seed.urls')),
 ]
 urlpatterns += [

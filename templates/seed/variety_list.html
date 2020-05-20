@@ -2,9 +2,6 @@
 {% block content %}
     {% load helper %}
     <br><h1>Varieties</h1><br>
-
-
-
     <div class="row">
         {% for variety in variety_list %}
             {% if variety.photo %}
@@ -26,9 +23,6 @@
             {% endif %}
         {% endfor %}
     </div>
-
-
-
 {% endblock %}
 
 {% block subNav %}

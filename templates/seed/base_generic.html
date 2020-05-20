@@ -34,17 +34,23 @@
 
 </head>
 <body>
-<div class="container brown lighten-5 class">
+{#<div class="container brown lighten-5 class">#}
+<div class="container afafa grey lighten-5">
     <!-- Page Layout here -->
 
     <!-- Navbar goes here -->
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Logo</a>
+            <a href="#" class="brand-logo"> Telusem</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="sass.html">Sass</a></li>
                 <li><a href="badges.html">Components</a></li>
                 <li><a href="collapsible.html">JavaScript</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
+                    <li>Loged in as {{ user.get_username }}</li>
+                {% else %}
+                    <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
@@ -67,30 +73,49 @@
                     {#                        <li><a href="{% url 'species' %}">Species</a></li>#}
                     {#                        <li><a href="{% url 'images' %}">Images</a></li>#}
                 </div>
-                <br>               {#                </ul>#}
+                <br> {#                </ul>#}
                 {% block subNav %}{% endblock %}
-                <br>
-                <div class="collection">
-                    {#                    <a href="{% url 'business_create' %}" class="collection-item">Create Business</a>#}
-                    {#                    <a href="{% url 'global_crop_create' %}" class="collection-item">Create Global Crop</a>#}
-                    {#                    <a href="{% url 'crop_family_create' %}" class="collection-item">Create Crop Family</a>#}
-                    <a href="{% url 'species_create' %}" class="collection-item">Create Species</a>
-                    {#                    <a href="{% url 'product-type_create' %}" class="collection-item">Create Product Type</a>#}
-                    <a href="{% url 'variety_create' %}" class="collection-item">Create Variety</a>
-                    {#                    <a href="{% url 'variety_supplier_create' %}" class="collection-item">Create Variety Supplier</a>#}
-                    {#                    <a href="{% url 'variety_base_data_create' %}" class="collection-item">Create Variety Base-data</a>#}
-                    {#                    <a href="{% url 'plc_create' %}" class="collection-item">Create Global PLC</a>#}
-                    <a href="{% url 'country_plc_create' %}" class="collection-item">Create Country PLC</a>
-                    {#                    <a href="{% url 'variety_field_create' %}" class="collection-item">Create Field Variety</a>#}
-                    {#                    <a href="{% url 'variety_field_value_create' %}" class="collection-item">Add Field Value</a>#}
-                    {#                    <a href="{% url 'mymodel_create' %}" class="collection-item">Create myModel</a>#}
-                    {#                    <a href="{% url 'image_create' %}" class="collection-item">tmp Create img</a>#}
-                </div>
+                {% if user.is_authenticated %}
+                    <br>
+                    <div class="collection">
+                        {#                    <a href="{% url 'business_create' %}" class="collection-item">Create Business</a>#}
+                        {#                    <a href="{% url 'global_crop_create' %}" class="collection-item">Create Global Crop</a>#}
+                        {#                    <a href="{% url 'crop_family_create' %}" class="collection-item">Create Crop Family</a>#}
+                        <a href="{% url 'species_create' %}" class="collection-item">Create Species</a>
+                        {#                    <a href="{% url 'product-type_create' %}" class="collection-item">Create Product Type</a>#}
+                        <a href="{% url 'variety_create' %}" class="collection-item">Create Variety</a>
+                        {#                    <a href="{% url 'variety_supplier_create' %}" class="collection-item">Create Variety Supplier</a>#}
+                        {#                    <a href="{% url 'variety_base_data_create' %}" class="collection-item">Create Variety Base-data</a>#}
+                        {#                    <a href="{% url 'plc_create' %}" class="collection-item">Create Global PLC</a>#}
+                        <a href="{% url 'country_plc_create' %}" class="collection-item">Create Country PLC</a>
+                        {#                    <a href="{% url 'variety_field_create' %}" class="collection-item">Create Field Variety</a>#}
+                        {#                    <a href="{% url 'variety_field_value_create' %}" class="collection-item">Add Field Value</a>#}
+                        {#                    <a href="{% url 'mymodel_create' %}" class="collection-item">Create myModel</a>#}
+                        {#                    <a href="{% url 'image_create' %}" class="collection-item">tmp Create img</a>#}
+                    </div>
+                {% endif %}
             {% endblock %}
         </div>
         <div class="col s12 m8 l9">
             <!-- Teal page content  -->
             {% block content %}{% endblock %}
+            {% block pagination %}
+                {% if is_paginated %}
+                    <div class="pagination">
+                        <span class="page-links">
+                            {% if page_obj.has_previous %}
+                                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                            {% endif %}
+                            <span class="page-current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                            {% if page_obj.has_next %}
+                                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endif %}
+            {% endblock %}
         </div>
     </div>
     <footer class="page-footer">

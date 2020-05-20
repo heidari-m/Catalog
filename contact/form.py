@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from .models import Contact, ContactType, Entity, Person
+from .widgets import *
 
 
 class ContactForm(ModelForm):
@@ -9,6 +10,7 @@ class ContactForm(ModelForm):
     class Meta:
         model = Contact
         fields = '__all__'
+        widgets = {'contact_type': SelectWithAddContactTypeWidget}
 
     # def __init__(self,contact, *args, **kwargs):
     #     super(ContactForm, self).__init__(*args, **kwargs)

@@ -48,7 +48,7 @@
         <table>
             <tr>
                 <td>Serial: {{ variety.serial_no }}</td>
-                <td id="id_basedata">Base-data
+                <td id="id_basedata">Base-data:
                     {% if variety.varietybasedata.id %}
                         <a hidden id="id_basedata_update"
                            href="{% url 'variety-basedata_update' variety.varietybasedata.id %}">Manage</a>
@@ -59,13 +59,13 @@
                 </td>
             </tr>
             <tr>
-                <td id="id_supplier">{{ variety.variety_supplier_name }} {{ variety.variety_supplier_id|yesnovar }}
+                <td id="id_supplier">Name by supplier: {{ variety.variety_supplier_name }} {{ variety.variety_supplier_id|yesnovar }}
                     {% if variety.varietysupplier %}
                         <a hidden id="id_supplier_data_update"
                            href="{% url 'variety-supplier_update' variety.varietysupplier.id %}">Manage</a>
                     {% else %}
                         <a id="id_supplier_data_add"
-                           href="{% url 'variety_supplier_create' variety.serial_no %}">Add</a>
+                           href="{% url 'variety_supplier_create2' variety.serial_no %}">Add</a>
                     {% endif %}
                     {#                    <a href="{% url 'variety-supplier-detail' variety.supplier.id %}">{{ variety.supplier.id }}</a>#}
                 </td>
@@ -79,10 +79,10 @@
                 <td>ProductType: {{ variety.product_type }}</td>
             </tr>
             <tr>
-                <td>PLC: {{ variety.productlifecycle_set.last.get_global_plc_display }} <a
+                <td>PLC: {{ variety.productlifecyclelog_set.last.get_global_plc_display }} <a
                         href="{% url 'plc_add' variety.serial_no %}">Manage</a></td>
                 {#                <td>PLC: {{ variety.latest_global_plc_display }} <a href="{% url 'plc_add' variety.serial_no %}">Manage</a> </td>#}
-                <td>PLC-Date: {{ variety.productlifecycle_set.last.global_plc_date }}</td>
+                <td>PLC-Date: {{ variety.productlifecyclelog_set.last.global_plc_date }}</td>
             </tr>
             <tr>
                 <td></td>

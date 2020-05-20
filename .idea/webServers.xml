@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d1cf492e-cffa-4b81-b94d-9e007be624f0" name="ubuntu" url="http://95.216.89.188:8000">
+        <fileTransfer host="95.216.89.188" port="3031" rootFolder="/var/www/pilot" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="3031" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

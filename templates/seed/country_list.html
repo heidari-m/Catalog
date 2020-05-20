@@ -1,0 +1,9 @@
+{% extends 'seed/base_generic.html' %}
+{% block content %}
+    {% if country_list %}
+        {% for country in country_list %}
+            <br><a href="{{ country.get_absolute_url }}">{{ country.name }}</a>
+        {% endfor %}
+
+    {% endif %}
+{% endblock %}

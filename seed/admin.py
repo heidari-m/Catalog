@@ -2,6 +2,9 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
+@admin.register(CropFamily)
+class CropFamilyAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Species)
@@ -31,6 +34,11 @@ class ProductTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Variety)
 class VarietyAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
     pass
 
 

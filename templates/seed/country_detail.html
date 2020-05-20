@@ -1,0 +1,5 @@
+{% extends 'seed/base_generic.html' %}
+{% block content %}
+    <br>{{ country.name }}
+    <a href="{% url 'country-update' country.id %}">Update</a>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'seed/base_generic.html' %}
+
+{% block content %}
+    {% for country_plc in countryplc_list %}
+        <p><a href="{{ country_plc.variety.get_absolute_url }}">{{ country_plc.variety }}</a> - {{ country_plc.get_local_name_display }}</p>
+    {% endfor %}
+{% endblock %}

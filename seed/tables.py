@@ -7,9 +7,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class PLCTable(tables.Table):
     class Meta:
-        model = ProductLifeCycle
+        model = ProductLifeCycleLog
         template_name = 'django_tables2/bootstrap4.html'
-        fields = ['variety','global_plc','global_plc_date']
+        fields = ['global_plc','global_plc_date']
+
+
 
 
 class VarietyFieldValueTable(tables.Table):

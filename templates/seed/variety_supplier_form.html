@@ -35,10 +35,12 @@
     </script>
 {% endblock %}
 {% block content %}
-    <div class="section">
-        <strong>Supplier Contact: </strong>
-        <a href="{% url 'contact-detail' varietysupplier.variety.supplier_contact.id %}">{{ varietysupplier.variety.supplier_contact }}</a>
-    </div>
+    {% if varietysupplier %}
+        <div class="section">
+            <strong>Supplier Contact: </strong>
+            <a href="{% url 'contact-detail' varietysupplier.variety.supplier_contact.id %}">{{ varietysupplier.variety.supplier_contact }}</a>
+        </div>
+    {% endif %}
     <form method="post" id="personForm" data-entity-url="{% url 'ajax_load_entities' %}"
           data-persons-url="{% url 'ajax_load_persons' %}" novalidate>
         {% csrf_token %}

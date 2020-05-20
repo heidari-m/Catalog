@@ -1,6 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+#
+from django.contrib.auth.models import Group, User
+from guardian.shortcuts import assign_perm
+from guardian.shortcuts import get_objects_for_user
+#
 from seed.models import *
 from django.views import generic
 #
@@ -8,7 +15,7 @@ from django_tables2 import SingleTableView, RequestConfig, SingleTableMixin, Mul
 from .tables import *
 #
 from seed.utils import render_to_pdf
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 #
 from django.core import serializers
 #
@@ -48,17 +55,18 @@ def index(request):
     return render(request, 'seed/index.html', context=context)
 
 
-class BusinessDivisionListView(generic.ListView):
+class BusinessDivisionListView(LoginRequiredMixin, generic.ListView):
     model = BusinessDivision
     template_name = 'seed/business_division_list.html'
 
 
-class BusinessDivisionCreate(generic.CreateView):
+class BusinessDivisionCreate(LoginRequiredMixin, generic.CreateView):
     model = BusinessDivision
     template_name = 'seed/business_division_form.html'
     fields = '__all__'
 
 
+@login_required
 def business_division_create(request):
     if request.method == "POST":
         form = BusinessDivisionForm(request.POST)
@@ -70,6 +78,7 @@ def business_division_create(request):
         return render(request, 'seed/business_division_form.html', {'form': form})
 
 
+@login_required
 def global_crop_create(request):
     if request.method == 'POST':
         form = GlobalCropForm(request.POST)
@@ -81,6 +90,7 @@ def global_crop_create(request):
         return render(request, 'seed/global_crop_form.html', {'form': form})
 
 
+@login_required
 def crop_family_create(request):
     if request.method == 'POST':
         form = CropFamilyForm(request.POST)
@@ -95,9 +105,10 @@ def crop_family_create(request):
 class SpeciesListView(generic.ListView):
     model = Species
     template_name = 'seed/species_list.html'
+    paginate_by = 12
 
 
-class SpeciesCreate(generic.CreateView):
+class SpeciesCreate(LoginRequiredMixin, generic.CreateView):
     model = Species
     # template_name = 'seed/species_form.html'
     # fields = '__all__'
@@ -105,12 +116,12 @@ class SpeciesCreate(generic.CreateView):
     success_url = reverse_lazy('species')
 
 
-class SpeciesUpdate(generic.UpdateView):
+class SpeciesUpdate(LoginRequiredMixin, generic.UpdateView):
     model = Species
     fields = '__all__'
 
 
-class SpeciesDelete(generic.DeleteView):
+class SpeciesDelete(LoginRequiredMixin, generic.DeleteView):
     model = Species
     fields = '__all__'
 
@@ -132,6 +143,7 @@ class SpeciesImageListView(generic.ListView):
     template_name = 'seed/image_list.html'
 
 
+@login_required
 def product_type_create(request):
     if request.method == "POST":
         form = ProductTypeForm(request.POST)
@@ -155,6 +167,7 @@ def product_type_create(request):
 #     fields = '__all__'
 
 
+login_required
 def image_create(request):
     if request.method == "POST":
         form = ImageForm(request.POST, request.FILES)
@@ -189,6 +202,9 @@ def image_create(request):
 class VarietyList(generic.ListView):
     model = Variety
 
+    def get_queryset(self):
+        return get_objects_for_user(self.request.user, 'seed.view_variety', accept_global_perms=False)
+
 
 class VarietyDetailView(generic.DetailView):
     model = Variety
@@ -222,17 +238,27 @@ class VarietyDetailView(generic.DetailView):
     #     return HttpResponse(pdf, content_type='application/pdf')
 
 
-from django.shortcuts import render_to_response
+# from django.shortcuts import render_to_response
 
 
+@login_required
 def variety_create(request):
     # request should be ajax and method should be POST.
     # if request.is_ajax and request.method == "POST":
+    # if not request.user.has_perm(''):
+    #     return HttpResponseForbidden()
+    # return render(request, 'prjmgr/payment_list.html', {'table': table})
+    if not request.user.has_perm('seed.add_variety'):
+        return HttpResponseForbidden()
     if (request.method == "POST"):
         form = VarietyForm(request.POST, request.FILES)
         # save the data and after fetch the object in instance
         if form.is_valid():
-            form.save()
+            instance = form.save()
+            # groups = request.user.groups.all()
+            groups = instance.group.all()
+            for group in groups:
+                assign_perm('seed.view_variety', group, instance)
             # instance = form.save()
             # serialize in new object in json
             # ser_instance = serializers.serialize('json', [instance, ])
@@ -243,6 +269,49 @@ def variety_create(request):
     else:
         form = VarietyForm()
         return render(request, 'seed/variety_form.html', {'form': form})
+
+
+def variety_serial_no(request):
+    # species_id = request.GET.get('species_id', None)
+    crop_family = request.GET.get('crop_family', None)
+    crop_family_qs = CropFamily.objects.get(id=crop_family)
+    # business_division_qs = BusinessDivision.objects.get(id=species_id).business_field
+    if crop_family_qs:
+        # qs = qs.values()[0]
+        variety_serial = (crop_family_qs.business_division.business_field + crop_family_qs.value[0:2]).upper()
+        qs2 = Variety.objects.filter(serial_no__startswith=variety_serial).order_by('serial_no').last()
+        if not qs2:
+            qs2 = Variety()
+            qs2.serial_no = variety_serial + '0AA00'
+        counter = qs2.serial_no[3:8]
+        int_1digit_counter = int(counter[0])
+        int_2last_counter = int(counter[3:5])
+        if int_2last_counter + 1 > 99:
+            int_2last_counter = 0
+            if ord(counter[2]) >= 90:
+                if ord(counter[1]) >= 90:
+                    int_1digit_counter += 1
+                    new_serial = qs2.serial_no[0:3] + str(int_1digit_counter) + 'AA' + "0" + str(
+                        int_2last_counter) + qs2.serial_no[8:12]
+                else:
+                    new_serial = qs2.serial_no[0:3] + counter[0] + chr(ord(counter[1]) + 1) + 'A' + "0" + str(
+                        int_2last_counter) + qs2.serial_no[8:12]
+            else:
+                new_serial = qs2.serial_no[0:3] + counter[0:2] + chr(ord(counter[2]) + 1) + "0" + str(
+                    int_2last_counter) + qs2.serial_no[8:12]
+        else:
+            if int_2last_counter + 1 > 9:
+                new_serial = qs2.serial_no[0:3] + counter[0:3] + str(int_2last_counter + 1) + qs2.serial_no[8:12]
+            else:
+                new_serial = qs2.serial_no[0:3] + counter[0:3] + "0" + str(int_2last_counter + 1) + qs2.serial_no[8:12]
+
+        # variety_serial +=
+    else:
+        new_serial = "Business field is not defined"
+    data = {
+        'serial_no': new_serial,
+    }
+    return JsonResponse(data)
 
 
 def load_crop_family(request):
@@ -279,12 +348,17 @@ def load_product_type(request):
 #     return render(request, 'seed/variety_form.html', {'form':form})
 
 
-class VarietyUpdate(generic.UpdateView):
+class VarietyUpdate(LoginRequiredMixin, generic.UpdateView):
     model = Variety
     # fields = '__all__'
     form_class = VarietyForm
     slug_field = 'serial_no'
     slug_url_kwarg = 'str'
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
+
 
 
 from http import HTTPStatus
@@ -307,6 +381,7 @@ def validate_variety_supplier_name(request):
     return JsonResponse(data)
 
 
+@login_required
 def variety_image_create(request):
     if request.method == "POST":
         form = VarietyImageForm(request.POST, request.FILES)
@@ -360,7 +435,7 @@ class VarietySupplierDetail(generic.DetailView):
     # slug_url_kwarg = 'str'
 
 
-class VarietySupplierUpdate(generic.UpdateView):
+class VarietySupplierUpdate(LoginRequiredMixin, generic.UpdateView):
     model = VarietySupplier
     template_name = 'seed/variety_supplier_form.html'
     fields = '__all__'
@@ -374,6 +449,7 @@ def variety_supplier_detail2(request):
     return render(request, 'seed/variety_supplier_detail2.html', {'varietysupplier': sup})
 
 
+@login_required
 def variety_supplier_create(request, str):
     if request.is_ajax and request.method == "POST":
         form = VarietySupplierForm(request.POST)
@@ -381,10 +457,11 @@ def variety_supplier_create(request, str):
         if form.is_valid():
             instance = form.save()
             # serialize in new object in json
-            ser_instance = serializers.serialize('json', [instance, ])
+            # ser_instance = serializers.serialize('json', [instance, ])
             # send to client side.
-            return JsonResponse({"instance": ser_instance}, status=200)
-            return redirect('/')
+            return redirect('variety-detail', str)
+            # return JsonResponse({"instance": ser_instance}, status=200)
+            # return redirect('/')
         else:
             # form = VarietyForm()
             # return render(request, 'seed/variety_form.html', {'form':form})
@@ -422,12 +499,13 @@ class AjaxableResponseMixin:
             return response
 
 
-class VarietyBaseDataUpdate(AjaxableResponseMixin, generic.UpdateView):
+class VarietyBaseDataUpdate(LoginRequiredMixin, AjaxableResponseMixin, generic.UpdateView):
     model = VarietyBaseData
     fields = '__all__'
     template_name = 'seed/variety_base_data_form.html'
 
 
+@login_required
 def variety_basedata_update(request):
     id = request.GET.get('variety_id', None)
     # dictionary for initial data with
@@ -464,12 +542,14 @@ def variety_base_data_detail(request):
     return render(request, 'seed/variety_base_data_detail.html', {'varietybasedata': variety_base_data})
 
 
+@login_required
 def variety_base_data_update(request):
     variety_base_data_id = request.GET.get('variety_base_data_id', None)
     variety_base_data = VarietyBaseData.objects.get(id=variety_base_data_id)
     return render(request, 'seed/variety_base_data_form.html', {'varietybasedata': variety_base_data})
 
 
+@login_required
 def variety_base_data_create(request, str):
     if request.is_ajax and request.method == "POST":
         form = VarietyBaseDataForm(request.POST)
@@ -500,16 +580,17 @@ def load_contact_person(request):
     return render(request, 'seed/persons_dropdown_list_options.html', {'persons': persons})
 
 
-class ProductLifeCycleList(generic.ListView):
-    model = ProductLifeCycle
+class ProductLifeCycleLogList(generic.ListView):
+    model = ProductLifeCycleLog
     template_name = 'seed/product_life_cycle_list.html'
 
 
-class ProductLifeCycleDetail(generic.DetailView):
-    model = ProductLifeCycle
+class ProductLifeCycleLogDetail(generic.DetailView):
+    model = ProductLifeCycleLog
     template_name = 'seed/product_life_cycle_detail.html'
 
 
+@login_required
 def product_life_cycle_create(request):
     if request.is_ajax and request.method == "POST":
         form = ProductLifeCycleForm(request.POST)
@@ -520,7 +601,7 @@ def product_life_cycle_create(request):
             ser_instance = serializers.serialize('json', [instance, ])
             # send to client side.
             return JsonResponse({"instance": ser_instance}, status=200)
-            return redirect('/')
+            # return redirect('/')
         else:
             # form = VarietyForm()
             # return render(request, 'seed/variety_form.html', {'form':form})
@@ -531,29 +612,38 @@ def product_life_cycle_create(request):
     return render(request, 'seed/product_life_cycle_form.html', {'form': form})
 
 
-class ProductLifeCycleUpdate(generic.UpdateView):
-    model = ProductLifeCycle
+class ProductLifeCycleLogUpdate(LoginRequiredMixin, generic.UpdateView):
+    model = ProductLifeCycleLog
     template_name = 'seed/product_life_cycle_form.html'
     # fields = '__all__'
     form_class = ProductLifeCycleForm
 
 
+@login_required
 def plc_manage_add(request, str):
     # a = request.session['variety_serial']
-    qs = ProductLifeCycle.objects.filter(variety=str)
+    qs = ProductLifeCycleLog.objects.filter(variety=str).order_by('-global_plc_date')
     table = PLCTable(qs)
     if request.method == 'POST':
-        form = PLCManageForm(request.POST)
+        form = PLCManageForm(request.POST, initial={'variety': str})
         if form.is_valid():
             form.save()
             return redirect('variety-detail', str)
         return render(request, 'seed/plc_manage_add.html', {'form': form, 'table': table})
     else:
         form = PLCManageForm(initial={'variety': str})
+        form.variety = str
+        # form.fields['variety'] = str
         # form = PLCManageForm(initial={'variety':request.session['variety_serial']})
         return render(request, 'seed/plc_manage_add.html', {'form': form, 'table': table})
 
 
+class CountryPlcList(generic.ListView):
+    model = CountryPLC
+    template_name = 'seed/country_plc_list.html'
+
+
+@login_required
 def country_plc_create(request):
     if request.is_ajax and request.method == "POST":
         form = CountryPLCForm(request.POST)
@@ -563,8 +653,9 @@ def country_plc_create(request):
             # serialize in new object in json
             ser_instance = serializers.serialize('json', [instance, ])
             # send to client side.
-            return JsonResponse({"instance": ser_instance}, status=200)
-            return redirect('/')
+            return redirect('country_plc_list')
+            # return JsonResponse({"instance": ser_instance}, status=200)
+            # return redirect('/')
         else:
             # form = VarietyForm()
             # return render(request, 'seed/variety_form.html', {'form':form})
@@ -575,49 +666,49 @@ def country_plc_create(request):
     return render(request, 'seed/country_plc_form.html', {'form': form})
 
 
-def variety_serial_no(request):
-    # species_id = request.GET.get('species_id', None)
-    crop_family = request.GET.get('crop_family', None)
-    crop_family_qs = CropFamily.objects.get(id=crop_family)
-    # business_division_qs = BusinessDivision.objects.get(id=species_id).business_field
-    if crop_family_qs:
-        # qs = qs.values()[0]
-        variety_serial = (crop_family_qs.business_division.business_field + crop_family_qs.value[0:2]).upper()
-        qs2 = Variety.objects.filter(serial_no__startswith=variety_serial).order_by('serial_no').last()
-        if not qs2:
-            qs2 = Variety()
-            qs2.serial_no = variety_serial + '0AA00'
-        counter = qs2.serial_no[3:8]
-        int_1digit_counter = int(counter[0])
-        int_2last_counter = int(counter[3:5])
-        if int_2last_counter + 1 > 99:
-            int_2last_counter = 0
-            if ord(counter[2]) >= 90:
-                if ord(counter[1]) >= 90:
-                    int_1digit_counter += 1
-                    new_serial = qs2.serial_no[0:3] + str(int_1digit_counter) + 'AA' + "0" + str(
-                        int_2last_counter) + qs2.serial_no[8:12]
-                else:
-                    new_serial = qs2.serial_no[0:3] + counter[0] + chr(ord(counter[1]) + 1) + 'A' + "0" + str(
-                        int_2last_counter) + qs2.serial_no[8:12]
-            else:
-                new_serial = qs2.serial_no[0:3] + counter[0:2] + chr(ord(counter[2]) + 1) + "0" + str(
-                    int_2last_counter) + qs2.serial_no[8:12]
+def country_plc_log_create(request):
+    if request.method == "POST":
+        form = CountryPlcLogForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect()
         else:
-            if int_2last_counter + 1 > 9:
-                new_serial = qs2.serial_no[0:3] + counter[0:3] + str(int_2last_counter + 1) + qs2.serial_no[8:12]
-            else:
-                new_serial = qs2.serial_no[0:3] + counter[0:3] + "0" + str(int_2last_counter + 1) + qs2.serial_no[8:12]
+            return
 
-        # variety_serial +=
+    form = CountryPlcLogForm()
+    return render(request, 'seed/country_plc_log_form.html', {'form':form})
+
+
+class CountryList(generic.ListView):
+    model = Country
+    template_name = 'seed/country_list.html'
+
+
+class CountryDetail(generic.DetailView):
+    model = Country
+    template_name = 'seed/country_detail.html'
+
+
+@login_required
+def country_create(request):
+    if request.method == 'POST':
+        form = CountryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('countries')
+        return render(request, 'seed/country_form.html', {'form':form})
     else:
-        new_serial = "Business field is not defined"
-    data = {
-        'serial_no': new_serial,
-    }
-    return JsonResponse(data)
+        form = CountryForm()
+        return render(request, 'seed/country_form.html', {'form':form})
 
 
+class CountryUpdate(LoginRequiredMixin, generic.UpdateView):
+    model = Country
+    template_name = 'seed/country_form.html'
+    fields = '__all__'
+
+
+@login_required
 def variety_field_create(request):
     if request.method == "POST":
         form = VarietyFieldForm(request.POST)
@@ -630,6 +721,7 @@ def variety_field_create(request):
         return render(request, 'seed/variety_field_form.html', {'form': form})
 
 
+@login_required
 def variety_field_value_create(request):
     if request.method == "POST":
         form = VarietyFieldValueForm(request.POST)
