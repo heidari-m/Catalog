@@ -50,7 +50,7 @@ class CropFamily(models.Model):
 class Species(models.Model):
     name = models.CharField(max_length=50)
     common_name = models.CharField(max_length=50, null=True, blank=True)
-    latin_name = models.CharField(max_length=50, null=True)
+    latin_name = models.CharField(max_length=70, null=True)
     photo = models.ImageField(upload_to='seed/repo/speices/image/', null=True, blank=True)
     #
     # product_life_cycle = models.ForeignKey('ProductLifeCycle', on_delete=models.SET_NULL, null=True)
@@ -189,7 +189,7 @@ class Variety(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     updated_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, related_name='updated_user')
-    group = models.ManyToManyField('auth.Group', null=True)
+    group = models.ManyToManyField('auth.Group', null=True, blank=True)
 
     class Meta:
         permissions = (
