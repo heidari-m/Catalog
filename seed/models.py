@@ -102,6 +102,12 @@ class CustomAttribute(models.Model):
     species = models.ForeignKey('Species', on_delete=models.CASCADE, null=True)
     attribute_name = models.CharField(max_length=60)
 
+    def __str__(self):
+        return self.attribute_name
+
+    def get_absolute_url(self):
+        return reverse('attribute-detail', args=[str(self.pk)])
+
 
 class SpeciesImage(models.Model):
     species = models.ForeignKey('Species', on_delete=models.CASCADE, null=True, blank=True)
@@ -246,6 +252,10 @@ class VarietyAttributeValue(models.Model):
     variety = models.ForeignKey('Variety', on_delete=models.CASCADE, null=True)
     custom_attribute = models.ForeignKey('CustomAttribute', on_delete=models.CASCADE, null=True)
     value = models.CharField(max_length=75)
+
+    def get_absolute_url(self, *args):
+        return reverse('attr-value_detail', args=[str(self.id)])
+
 
 
 class VarietyBaseData(models.Model):

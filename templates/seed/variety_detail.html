@@ -37,6 +37,23 @@
             });
         });
     </script>
+    <script>
+        // fetch custom attributes
+        $("#id_serial_no").click(function () {
+            var url = $("#sec_form").attr("data-custom-attr-url");
+            $.ajax({
+                url: url,
+                data: {
+                    'variety_id': '{{ variety.serial_no }}',
+                },
+                success: function (data) {
+                    $("#sec_form").html(data);
+                    {#$('#id_basedata_update').show('slow');#}
+                }
+            });
+        });
+    </script>
+
 {% endblock %}
 
 {% block content %}
@@ -47,7 +64,9 @@
         {#        <a href="{% url '' variety.serial_no %}"> - Delete</a>#}
         <table>
             <tr>
-                <td>Serial: {{ variety.serial_no }}</td>
+                <td id="id_serial_no">Serial:
+                    {{ variety.serial_no }}
+                </td>
                 <td id="id_basedata">Base-data:
                     {% if variety.varietybasedata.id %}
                         <a hidden id="id_basedata_update"
@@ -59,7 +78,8 @@
                 </td>
             </tr>
             <tr>
-                <td id="id_supplier">Name by supplier: {{ variety.variety_supplier_name }} {{ variety.variety_supplier_id|yesnovar }}
+                <td id="id_supplier">Name by
+                    supplier: {{ variety.variety_supplier_name }} {{ variety.variety_supplier_id|yesnovar }}
                     {% if variety.varietysupplier %}
                         <a hidden id="id_supplier_data_update"
                            href="{% url 'variety-supplier_update' variety.varietysupplier.id %}">Manage</a>
@@ -70,7 +90,8 @@
                     {#                    <a href="{% url 'variety-supplier-detail' variety.supplier.id %}">{{ variety.supplier.id }}</a>#}
                 </td>
                 <td>
-                    Contact: <a href="{% url 'contact-detail' variety.supplier_contact.id %}">{{ variety.supplier_contact }}</a>
+                    Contact: <a
+                        href="{% url 'contact-detail' variety.supplier_contact.id %}">{{ variety.supplier_contact }}</a>
                 </td>
             </tr>
             <tr>
@@ -90,7 +111,8 @@
         </table>
     </div>
     <div class="section">
-        <form method="post" id="sec_form" data-supplier-url="{% url 'ajax_load_supplier' %}"
+        <form method="post" id="sec_form" data-custom-attr-url="{% url 'ajax_load_attribute-values' %}"
+              data-supplier-url="{% url 'ajax_load_supplier' %}"
               data-base-url="{% url 'ajax_load_basedata' %}" novalidate>
             <h6>Second Form</h6>
 

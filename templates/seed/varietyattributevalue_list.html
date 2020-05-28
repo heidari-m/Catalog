@@ -1,0 +1,16 @@
+{% extends 'seed/base_generic.html' %}
+{% block content %}
+    <br><h1>All Attribute Vlues</h1><br>
+    {% if varietyattributevalue_list %}
+        <ul>
+            {% for attr_value in varietyattributevalue_list %}
+                <li>
+                    {{ attr_value.value }} <--- {{ attr_value.custom_attribute }} <--- {{ attr_value.variety }}
+                    {#                    <a href="{{ attr.get_absolute_url }}">{{ attr.attribute_name }}</a>#}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There is no Info</p>
+    {% endif %}
+{% endblock %}

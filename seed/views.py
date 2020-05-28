@@ -138,6 +138,22 @@ class SpeciesDetailView(generic.DetailView):
         return context
 
 
+class CustomAtrributeList(LoginRequiredMixin, generic.ListView):
+    model = CustomAttribute
+    template_name = 'seed/customattribute_list.html'
+
+
+class CustomAttributeCreate(LoginRequiredMixin, generic.CreateView):
+    model = CustomAttribute
+    fields = '__all__'
+    success_url = reverse_lazy('attributes')
+
+
+class CustomAttributeDetail(LoginRequiredMixin, generic.DetailView):
+    model = CustomAttribute
+    template_name = 'seed/customattribute_detail.html'
+
+
 class SpeciesImageListView(generic.ListView):
     model = SpeciesImage
     template_name = 'seed/image_list.html'
@@ -497,6 +513,39 @@ class AjaxableResponseMixin:
             return JsonResponse(data)
         else:
             return response
+
+
+class VarietyAttributeValueList(LoginRequiredMixin, generic.ListView):
+    model = VarietyAttributeValue
+    template_name = 'seed/varietyattributevalue_list.html'
+
+
+class VarietyAttributeValueCreate(LoginRequiredMixin, generic.CreateView):
+    model = VarietyAttributeValue
+    fields = '__all__'
+
+    # def get_queryset(self):
+
+
+def load_attributes(request):
+    variety_id = request.GET.get('variety_id')
+    variety = Variety.objects.get(serial_no=variety_id)
+    if variety:
+        custom_attributes_list = CustomAttribute.objects.filter(species=variety.species)
+    else:
+        custom_attributes_list = CustomAttribute.objects.all()
+    return render(request, 'seed/customattribute_dropdown_list_options.html', {'custom_attributes_list': custom_attributes_list})
+
+
+class VarietyAttributeValueDetail(LoginRequiredMixin, generic.DetailView):
+    model = VarietyAttributeValue
+    template_name = 'seed/varietyattributevalue_detail.html'
+
+
+def variety_attribute_value_detail2(request):
+    variety_id = request.GET.get('variety_id', None)
+    attr_values = VarietyAttributeValue.objects.filter(variety=variety_id)
+    return render(request, 'seed/varietyattributevalue_detail2.html', {'attributevalues_list': attr_values})
 
 
 class VarietyBaseDataUpdate(LoginRequiredMixin, AjaxableResponseMixin, generic.UpdateView):

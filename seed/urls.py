@@ -23,6 +23,10 @@ urlpatterns = [
     path('species/<int:pk>/update', views.SpeciesUpdate.as_view(), name='species_update'),
     path('species/<int:pk>/delete', views.SpeciesDelete.as_view(), name='species_delete'),
     #
+    path('attributes/', views.CustomAtrributeList.as_view(), name='attributes'),
+    path('attribute/create', views.CustomAttributeCreate.as_view(), name='attribute-create'),
+    path('attribute/<int:pk>', views.CustomAttributeDetail.as_view(), name='attribute-detail'),
+    #
     path('product-type/create', views.product_type_create, name='product-type_create'),
     #
     # path('variety/<slug:str>', views.VarietyDetailView.as_view(), name='variety-detail'),
@@ -52,6 +56,12 @@ urlpatterns = [
     path('variety/supplier/<int:pk>', views.VarietySupplierDetail.as_view(), name='variety-supplier-detail'),
     path('variety/suppliers/', views.VarietySupplierList.as_view(), name='variety-supplier-list'),
     path('variety/suppliers/<int:pk>/update', views.VarietySupplierUpdate.as_view(), name='variety-supplier_update'),
+    #
+    path('attr-values/', views.VarietyAttributeValueList.as_view(), name='attr-values'),
+    path('attr-value/create', views.VarietyAttributeValueCreate.as_view(), name='attr-value_create'),
+    path('ajax/load-attributes', views.load_attributes, name='ajax-load-attributes'),
+    path('attr-value/<int:pk>', views.VarietyAttributeValueDetail.as_view(), name='attr-value_detail'),
+    path('ajax/load-attribute-values/', views.variety_attribute_value_detail2, name='ajax_load_attribute-values'),
     #
     path('ajax/load-entities/', views.load_contact_entity, name='ajax_load_entities'),
     path('ajax/load-persons/', views.load_contact_person, name='ajax_load_persons'),

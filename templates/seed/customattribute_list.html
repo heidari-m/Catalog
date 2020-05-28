@@ -1,0 +1,16 @@
+{% extends 'seed/base_generic.html' %}
+{% block content %}
+    <br><h1>All Attributes</h1><br>
+    {% if customattribute_list %}
+        <ul>
+            {% for attr in customattribute_list %}
+                <li>
+                    {{ attr.attribute_name }}. . . .belongs to {{ attr.species }}
+                    {#                    <a href="{{ attr.get_absolute_url }}">{{ attr.attribute_name }}</a>#}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There is no Info</p>
+    {% endif %}
+{% endblock %}

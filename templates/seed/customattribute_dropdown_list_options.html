@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for attr in custom_attributes_list %}
+    <option value="{{ attr.pk }}">{{ attr }}</option>
+{% endfor %}
