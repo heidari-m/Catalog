@@ -242,6 +242,12 @@ class VarietySupplier(models.Model):
         return reverse('variety-supplier-detail', args=[str(self.id)])
 
 
+class VarietyAttributeValue(models.Model):
+    variety = models.ForeignKey('Variety', on_delete=models.CASCADE, null=True)
+    custom_attribute = models.ForeignKey('CustomAttribute', on_delete=models.CASCADE, null=True)
+    value = models.CharField(max_length=75)
+
+
 class VarietyBaseData(models.Model):
     variety = models.OneToOneField('Variety', on_delete=models.CASCADE)
     usage = models.CharField(max_length=2, choices=constant.USEAGE, null=True, blank=True)
