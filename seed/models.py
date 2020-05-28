@@ -98,6 +98,11 @@ class Species(models.Model):
         return reverse('species-detail', args=[str(self.pk)])
 
 
+class CustomAttribute(models.Model):
+    species = models.ForeignKey('Species', on_delete=models.CASCADE, null=True)
+    attribute_name = models.CharField(max_length=60)
+
+
 class SpeciesImage(models.Model):
     species = models.ForeignKey('Species', on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=50, null=True, blank=True)
