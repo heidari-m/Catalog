@@ -325,3 +325,9 @@ class CountryForm(ModelForm):
     class Meta:
         model = Country
         fields = '__all__'
+
+
+class SearchForm(ModelForm):
+    class Meta:
+        model = Variety
+        fields = ['variety_supplier_name','serial_no']

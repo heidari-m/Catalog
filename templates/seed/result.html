@@ -1,0 +1,50 @@
+{% extends 'seed/base_generic.html' %}
+{% block content %}
+    <form method="post" action="">
+        {% csrf_token %}
+        <table>
+            <thead>
+            <tr>
+                <th>Serial Number</th>
+                <th>Species</th>
+                <th>Variety</th>
+                <th>add</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for variety in variety_list %}
+                <tr>
+                    {% if not variety.serial_no in request.session.selected_varieties %}
+                        {#                <label class="checkbox">test<input type="checkbox" name="t[]" value="" checked></label>#}
+                        <td><a href="{% url 'variety-detail' variety.serial_no %}">{{ variety.serial_no }}</a></td>
+                        <td>{{ variety.species }}</td>
+                        <td>{{ variety.variety_supplier_name }}</td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="variety" value="{{ variety.serial_no }}"/>
+                                <span></span>
+                            </label>
+                        </td>
+                    {% else %}
+                        <td><a href="{% url 'variety-detail' variety.serial_no %}">{{ variety.serial_no }}</a></td>
+                        <td>{{ variety.species }}</td>
+                        <td>{{ variety.variety_supplier_name }}</td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="checks[]" value="{{ variety.serial_no }}" checked/>
+                                <span></span>
+                            </label>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <P>
+            <input type="submit" value="Report" class="btn btn-primary">
+            <input type="submit" value="Add to Report and back to search" name="{{ variety.serial_no }}">
+        </P>
+        {#        {{ result.variety_supplier_name }} - {{ result.serial_no }}#}
+    </form>
+{% endblock %}

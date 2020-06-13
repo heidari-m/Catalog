@@ -251,11 +251,10 @@ class VarietySupplier(models.Model):
 class VarietyAttributeValue(models.Model):
     variety = models.ForeignKey('Variety', on_delete=models.CASCADE, null=True)
     custom_attribute = models.ForeignKey('CustomAttribute', on_delete=models.CASCADE, null=True)
-    value = models.CharField(max_length=75)
+    value = models.CharField(max_length=150)
 
     def get_absolute_url(self, *args):
         return reverse('attr-value_detail', args=[str(self.id)])
-
 
 
 class VarietyBaseData(models.Model):

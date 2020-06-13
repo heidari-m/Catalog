@@ -60,8 +60,10 @@ urlpatterns = [
     path('attr-values/', views.VarietyAttributeValueList.as_view(), name='attr-values'),
     path('attr-value/create', views.VarietyAttributeValueCreate.as_view(), name='attr-value_create'),
     path('ajax/load-attributes', views.load_attributes, name='ajax-load-attributes'),
+    path('ajax/load-current-attributes', views.load_current_attributes, name='ajax-load-current-attributes'),
     path('attr-value/<int:pk>', views.VarietyAttributeValueDetail.as_view(), name='attr-value_detail'),
     path('ajax/load-attribute-values/', views.variety_attribute_value_detail2, name='ajax_load_attribute-values'),
+    path('ajax/load-current-variety/', views.load_current_variety, name='ajax-load-current-variety'),
     #
     path('ajax/load-entities/', views.load_contact_entity, name='ajax_load_entities'),
     path('ajax/load-persons/', views.load_contact_person, name='ajax_load_persons'),
@@ -114,10 +116,15 @@ urlpatterns = [
     path('model2/<int:pk>/edit', views.model2_edit_popup, name='model2-edit'),
     path('model2/ajax/get_model2_id', views.get_model2_id, name='get_model2_id'),
     # url(r'^model2/ajax/get_model2_id', views.get_model2_id, name = "get_model2_id"),
-    path('pdf8/', views.generate_pdf, name='generate_pdf'),
+    # path('pdf8/', views.generate_pdf, name='generate_pdf'),
     path('images/', views.SpeciesImageListView.as_view(), name='images'),
     # path('image/create', views.ImageCreate.as_view(), name='image_create'),
     path('image/create', views.image_create, name='image_create'),
     path('name/', views.get_name, name='name'),
     # path('contact/',views.handle_this,name='contact'),
+    #
+    path('report/', views.report, name='report'),
+    path('search/', views.search, name='search'),
+    path('result/<slug:str>', views.result, name='result'),
+
 ]

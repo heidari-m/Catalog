@@ -1,0 +1,23 @@
+{% extends 'seed/base_generic.html' %}
+{% block content %}
+    {% regroup result by variety as variety_list %}
+    <table>
+        {% for variety in variety_list %}
+            <tr>
+                <td>
+                    <p>Species: <a
+                            href="{{ variety.grouper.species.get_absolute_url }}">{{ variety.grouper.species }}</a> -
+                        ({{ variety.grouper.species.latin_name }})
+                        <br>
+                        Variety Name: <a href="{{ variety.grouper.get_absolute_url }}">{{ variety.grouper }}</a>
+                        - {{ variety.grouper.serial_no }}</p>
+                    Attributes
+                    {% for attribute in variety.list %}
+                        <br>{{ attribute.custom_attribute }}: {{ attribute.value }}
+                    {% endfor %}
+                </td>
+                <td><img src="{{ variety.grouper.photo.url }}"></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

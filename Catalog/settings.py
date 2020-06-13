@@ -79,6 +79,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.static',
+                # 'django.core.context_processors',
+                # 'django.template.context_processors'
             ],
         },
     },
@@ -152,6 +154,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'templates/')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'templates/seed/statics'),
+    os.path.join(BASE_DIR, 'templates/contact/static'),
 ]
 
 # Simplified static file serving.

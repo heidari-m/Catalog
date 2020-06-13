@@ -1,0 +1,60 @@
+{% extends 'seed/base_generic.html' %}
+{% block javascript %}
+    {#    <script>#}
+    {#        $('.chips').chips();#}
+    {#        $('.chips-initial').chips({#}
+    {#            data: [{#}
+    {#                tag: 'Apple',#}
+    {#            }, {#}
+    {#                tag: 'Microsoft',#}
+    {#            }, {#}
+    {#                tag: 'Google',#}
+    {#            }],#}
+    {#        });#}
+    {#        $('.chips-placeholder').chips({#}
+    {#            placeholder: 'Enter a tag',#}
+    {#            secondaryPlaceholder: '+Tag',#}
+    {#        });#}
+    {#        $('.chips-autocomplete').chips({#}
+    {#            autocompleteOptions: {#}
+    {#                data: {#}
+    {#                    'Apple': null,#}
+    {#                    'Apol': null,#}
+    {#                    'Microsoft': null,#}
+    {#                    'Google': null#}
+    {#                },#}
+    {#                limit: Infinity,#}
+    {#                minLength: 1#}
+    {#            }#}
+    {#        });#}
+    {#    </script>#}
+{% endblock %}
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <br>
+        <input type="submit" value="Find" class="btn btn-primary">
+        <a class="btn btn-primary" href="{% url 'report' %}">Show Result</a>
+        <br><br>
+        <div class="input-field col s12">
+            <input placeholder="Type here" id="id_keyword" type="text" name="keyword"
+                   value="{{ variety_name }}">
+            <label for="id_keyword">
+                <Search></Search>
+            </label>
+        </div>
+        <br>
+        <div class="section">
+            <label><input type="checkbox" name="search_option" value="serial_no"/><span>Serial Number</span></label>
+            <label><input type="checkbox" name="search_option" value="species__name"/><span>Species</span></label>
+            <label><input type="checkbox" name="search_option"
+                          value="crop_family__value"/><span>Crop Family</span></label>
+        </div>
+        <br>
+        <div>
+            {% for variety in result %}
+                <br>{{ variety }}
+            {% endfor %}
+        </div>
+    </form>
+{% endblock %}

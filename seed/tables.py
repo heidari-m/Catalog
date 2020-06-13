@@ -27,3 +27,11 @@ class FamilySpecificationTable(tables.Table):
     class Meta:
         model = Species
         template_name = 'django_tables2/bootstrap4.html'
+
+
+class SearchResultTable(tables.Table):
+    chh = tables.CheckBoxColumn()
+    class Meta:
+        model = Variety
+        'django_tables2/bootstrap4.html'
+        fields = ('serial_no','species','variety_supplier_name')

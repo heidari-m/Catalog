@@ -19,6 +19,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRe
 #
 from django.core import serializers
 #
+from django.db.models import Q
+#
 # from django.views.generic import View
 import datetime
 #
@@ -170,7 +172,8 @@ def product_type_create(request):
             # return render(request, 'seed/product_type_dropdown_list_options.html',
             #               {'product_type_list': product_type_list})
             return HttpResponse(
-                '<script>opener.closePopup(window, "%s", "%s", "#id_product_type");</script>' % (instance.pk, instance.type))
+                '<script>opener.closePopup(window, "%s", "%s", "#id_product_type");</script>' % (
+                instance.pk, instance.type))
         return render(request, 'seed/product_type_form.html', {'form': form})
     else:
         form = ProductTypeForm()
@@ -184,6 +187,8 @@ def product_type_create(request):
 
 
 login_required
+
+
 def image_create(request):
     if request.method == "POST":
         form = ImageForm(request.POST, request.FILES)
@@ -376,7 +381,6 @@ class VarietyUpdate(LoginRequiredMixin, generic.UpdateView):
         return super().form_valid(form)
 
 
-
 from http import HTTPStatus
 
 
@@ -524,6 +528,7 @@ class VarietyAttributeValueCreate(LoginRequiredMixin, generic.CreateView):
     model = VarietyAttributeValue
     fields = '__all__'
 
+
     # def get_queryset(self):
 
 
@@ -532,9 +537,32 @@ def load_attributes(request):
     variety = Variety.objects.get(serial_no=variety_id)
     if variety:
         custom_attributes_list = CustomAttribute.objects.filter(species=variety.species)
+        current_attribute_set = variety.varietyattributevalue_set.all()
+        return render(request, 'seed/customattribute_dropdown_list_options.html',
+                      {'custom_attributes_list': custom_attributes_list})
     else:
         custom_attributes_list = CustomAttribute.objects.all()
-    return render(request, 'seed/customattribute_dropdown_list_options.html', {'custom_attributes_list': custom_attributes_list})
+    return render(request, 'seed/customattribute_dropdown_list_options.html',
+                  {'custom_attributes_list': custom_attributes_list})
+
+
+def load_current_attributes(request):
+    variety_id = request.GET.get('variety_id')
+    variety = Variety.objects.get(serial_no=variety_id)
+    if variety:
+        current_attribute_set = variety.varietyattributevalue_set.all()
+        return render(request, 'seed/current_attribute_list.html',
+                      {'current_attribute_set': current_attribute_set})
+    return
+
+
+def load_current_variety(request):
+    variety_id = request.GET.get('variety_id')
+    variety = Variety.objects.get(serial_no=variety_id)
+    if variety:
+        return render(request, 'seed/current_variety.html',
+                      {'current_variety': variety})
+    return
 
 
 class VarietyAttributeValueDetail(LoginRequiredMixin, generic.DetailView):
@@ -725,7 +753,7 @@ def country_plc_log_create(request):
             return
 
     form = CountryPlcLogForm()
-    return render(request, 'seed/country_plc_log_form.html', {'form':form})
+    return render(request, 'seed/country_plc_log_form.html', {'form': form})
 
 
 class CountryList(generic.ListView):
@@ -745,10 +773,10 @@ def country_create(request):
         if form.is_valid():
             form.save()
             return redirect('countries')
-        return render(request, 'seed/country_form.html', {'form':form})
+        return render(request, 'seed/country_form.html', {'form': form})
     else:
         form = CountryForm()
-        return render(request, 'seed/country_form.html', {'form':form})
+        return render(request, 'seed/country_form.html', {'form': form})
 
 
 class CountryUpdate(LoginRequiredMixin, generic.UpdateView):
@@ -889,7 +917,7 @@ class myModelDeatilView(generic.DetailView):
 
 
 from django.template.loader import render_to_string
-from weasyprint import HTML
+# from weasyprint import HTML
 import tempfile
 # def generate_pdf(request):
 #     species = Species.objects.all()
@@ -912,13 +940,13 @@ import tempfile
 from django.template import loader, RequestContext
 
 
-def generate_pdf(request):
-    species = Species.objects.get(id=3)
-    template = loader.get_template('seed/species_detail.html')
-    html = template.render({'species': species})
-    response = HttpResponse(content_type='application/pdf')
-    HTML(string=html).write_pdf(response)
-    return response
+# def generate_pdf(request):
+#     species = Species.objects.get(id=3)
+#     template = loader.get_template('seed/species_detail.html')
+#     html = template.render({'species': species})
+#     response = HttpResponse(content_type='application/pdf')
+#     HTML(string=html).write_pdf(response)
+#     return response
 
 
 from seed.forms import NameForm, ContactForm
@@ -949,3 +977,35 @@ from django.core.mail import send_mail
 def handle_this(request):
     form = ContactForm()
     return render(request, 'seed/contact.html', {'form': form})
+
+
+def report(request):
+    str = request.session['selected_varieties']
+    qs = VarietyAttributeValue.objects.filter(variety__serial_no__in=str).order_by('variety_id')
+    return render(request, 'seed/report.html', {'result': qs,})
+
+
+def search(request):
+    if request.method == 'POST':
+        keyword = request.POST.get('keyword').replace(" ", "_")
+        request.session['search_option'] = request.POST.getlist('search_option')
+        return redirect('result',keyword)
+    qs = Variety.objects.all()
+    # request.session['selected_varieties'] = ['SSO0AA02','SCU0AA03', 'SLI0AA03', 'SCO0AA20']
+    return render(request, 'seed/search.html', {'result':qs})
+
+
+def result(request, str):
+    if request.method == 'POST':
+        tmp = request.POST.getlist('variety')
+        request.session['selected_varieties'] = tmp
+        return redirect('report')
+
+    # prepare search query based on selected fields
+    # selected fields are in search_option list in session.
+    query = Q(variety_supplier_name__icontains=str.replace("_", " "))
+    for option in request.session['search_option']:
+        if option:
+            query |= Q(**{"%s__icontains"%option:str.replace("_", " ")})
+    qs = Variety.objects.filter(query)
+    return render(request, 'seed/result.html', {'variety_list': qs})
