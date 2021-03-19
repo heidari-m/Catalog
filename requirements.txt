@@ -57,7 +57,7 @@ djangocms-snippet==2.2.0
 djangocms-style==2.2.0
 djangocms-text-ckeditor==3.8.0
 djangocms-video==2.2.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 easy-thumbnails==2.7
 et-xmlfile==1.0.1
 Flask==1.1.1
